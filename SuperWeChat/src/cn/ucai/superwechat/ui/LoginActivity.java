@@ -218,4 +218,8 @@ public class LoginActivity extends BaseActivity {
 			return;
 		}
 	}
+
+	public void back(View view){
+		LoginActivity.this.finish();
+	}
 }
