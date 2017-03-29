@@ -21,7 +21,7 @@ import android.util.Log;
 import com.easemob.redpacketsdk.RedPacket;
 import com.hyphenate.easeui.domain.User;
 
-import cn.ucai.superwechat.dao.UserDao;
+import cn.ucai.superwechat.db.UserDao;
 import cn.ucai.superwechat.utils.SharePrefrenceUtils;
 
 public class SuperWeChatApplication extends Application {
@@ -29,6 +29,7 @@ public class SuperWeChatApplication extends Application {
 	public static Context applicationContext;
 	private static SuperWeChatApplication instance;
 	static User user;
+
 	public static User getUser() {
 		if (user == null){
 			String userName = SharePrefrenceUtils.getInstance().getUserName();
