@@ -4,15 +4,19 @@ import android.content.Context;
 
 import com.hyphenate.EMValueCallBack;
 import com.hyphenate.chat.EMClient;
+
+import cn.ucai.superwechat.SuperWeChatApplication;
 import cn.ucai.superwechat.SuperWeChatHelper;
 import cn.ucai.superwechat.SuperWeChatHelper.DataSyncListener;
 import cn.ucai.superwechat.bean.Result;
+import cn.ucai.superwechat.db.UserDao;
 import cn.ucai.superwechat.model.IUserModel;
 import cn.ucai.superwechat.model.OnCompleteListener;
 import cn.ucai.superwechat.model.UserModel;
 import cn.ucai.superwechat.utils.L;
 import cn.ucai.superwechat.utils.PreferenceManager;
 import cn.ucai.superwechat.utils.ResultUtils;
+import cn.ucai.superwechat.utils.SharePrefrenceUtils;
 
 import com.hyphenate.easeui.domain.EaseUser;
 import com.hyphenate.easeui.domain.User;
@@ -152,25 +156,43 @@ public class UserProfileManager {
 		return avatarUrl;
 	}
 	public void asyncGetAppCurrentUserInfo() {
-		userModel.loadUserInfo(appContext,SuperWeChatHelper.getInstance().getCurrentUsernName(),
+		userModel.loadUserInfo(appContext,EMClient.getInstance().getCurrentUser(),
 				new OnCompleteListener<String>() {
 			@Override
 			public void onSuccess(String result) {
+				L.e(TAG,"asyncGetAppCurrentUserInfo(),result = " + result);
 				if (result != null){
+					L.e(TAG,"asyncGetAppCurrentUserInfo(),result1 = " + result);
 					Result res = ResultUtils.getResultFromJson(result, User.class);
 					if (res != null && res.isRetMsg()){
 						User user = (User) res.getRetData();
 						L.e(TAG,"asyncGetAppCurrentUserInfo(),user = " + user);
+						//将数据保存到首选项、内存和数据库中
+						savaUserInfo(user);
 					}
 				}
 			}
 
 			@Override
 			public void onError(String error) {
-
+				L.e(TAG,"error = " + error);
 			}
 		});
 	}
+
+	private void savaUserInfo(final User user) {
+		L.e(TAG,"savaUserInfo,user = " + user);
+		SuperWeChatApplication.setUser(user);//保存到内存中
+		SharePrefrenceUtils.getInstance().setUserName(user.getMUserName());
+		new Thread(new Runnable() {
+			@Override
+			public void run() {
+				boolean b = UserDao.getInstance(appContext).saveUserInfo(user);
+				L.e(TAG,"savaUserInfo, b = " + b);
+			}
+		}).start();
+	}
+
 	public void asyncGetCurrentUserInfo() {
 		ParseManager.getInstance().asyncGetCurrentUserInfo(new EMValueCallBack<EaseUser>() {
 			@Override
