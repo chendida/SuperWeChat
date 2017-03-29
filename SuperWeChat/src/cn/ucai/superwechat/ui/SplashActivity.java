@@ -8,6 +8,8 @@ import android.widget.RelativeLayout;
 import com.hyphenate.chat.EMClient;
 import cn.ucai.superwechat.SuperWeChatHelper;
 import cn.ucai.superwechat.R;
+import cn.ucai.superwechat.utils.MFGT;
+
 import com.hyphenate.util.EasyUtils;
 
 /**
@@ -22,15 +24,8 @@ public class SplashActivity extends BaseActivity {
 	protected void onCreate(Bundle arg0) {
 		setContentView(R.layout.em_activity_splash);
 		super.onCreate(arg0);
-
-		RelativeLayout rootLayout = (RelativeLayout) findViewById(R.id.splash_root);
-		//TextView versionText = (TextView) findViewById(R.id.tv_version);
-
-//		versionText.setText(getVersion());
-		AlphaAnimation animation = new AlphaAnimation(0.3f, 1.0f);
-		animation.setDuration(1500);
-		rootLayout.startAnimation(animation);
 	}
+
 
 	@Override
 	protected void onStart() {
@@ -58,16 +53,16 @@ public class SplashActivity extends BaseActivity {
 						// avoid main screen overlap Calling Activity
 					} else {
 						//enter main screen
-						startActivity(new Intent(SplashActivity.this, MainActivity.class));
+						MFGT.gotoMain(SplashActivity.this);
 					}
-					finish();
+					MFGT.finish(SplashActivity.this);
 				}else {
 					try {
 						Thread.sleep(sleepTime);
 					} catch (InterruptedException e) {
 					}
-					startActivity(new Intent(SplashActivity.this,WelcomeActivity.class));
-					finish();
+					MFGT.gotoWelcomeActivity(SplashActivity.this);
+					MFGT.finish(SplashActivity.this);
 				}
 			}
 		}).start();
