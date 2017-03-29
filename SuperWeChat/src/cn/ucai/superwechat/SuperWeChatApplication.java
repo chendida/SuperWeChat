@@ -16,13 +16,31 @@ package cn.ucai.superwechat;
 import android.app.Application;
 import android.content.Context;
 import android.support.multidex.MultiDex;
+import android.util.Log;
 
 import com.easemob.redpacketsdk.RedPacket;
+import com.hyphenate.easeui.domain.User;
+
+import cn.ucai.superwechat.dao.UserDao;
+import cn.ucai.superwechat.utils.SharePrefrenceUtils;
 
 public class SuperWeChatApplication extends Application {
 
 	public static Context applicationContext;
 	private static SuperWeChatApplication instance;
+	static User user;
+	public static User getUser() {
+		if (user == null){
+			String userName = SharePrefrenceUtils.getInstance().getUserName();
+			Log.e("application","userName =" + userName);
+			User user = UserDao.getInstance(instance).getUserInfo(userName);
+		}
+		return user;
+	}
+
+	public static void setUser(User user) {
+		SuperWeChatApplication.user = user;
+	}
 	// login user name
 	public final String PREF_USERNAME = "username";
 	
