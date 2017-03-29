@@ -14,7 +14,6 @@
 package cn.ucai.superwechat.ui;
 
 import android.app.ProgressDialog;
-import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
@@ -32,7 +31,6 @@ import cn.ucai.superwechat.I;
 import cn.ucai.superwechat.R;
 import cn.ucai.superwechat.SuperWeChatHelper;
 import cn.ucai.superwechat.bean.Result;
-import cn.ucai.superwechat.bean.User;
 import cn.ucai.superwechat.model.IUserModel;
 import cn.ucai.superwechat.model.OnCompleteListener;
 import cn.ucai.superwechat.model.UserModel;
@@ -109,7 +107,7 @@ public class RegisterActivity extends BaseActivity {
                 new OnCompleteListener<String>() {
             @Override
             public void onSuccess(String result) {
-                Result res = ResultUtils.getResultFromJson(result, User.class);
+                Result res = ResultUtils.getResultFromJson(result, String.class);
                 if (res != null ){
                     if (res.isRetMsg()){//注册成功
                         Log.e(TAG,"register,res = " + res);
@@ -154,7 +152,7 @@ public class RegisterActivity extends BaseActivity {
                                 // save current user
                                 SuperWeChatHelper.getInstance().setCurrentUserName(username);
                                 Toast.makeText(getApplicationContext(), getResources().getString(R.string.Registered_successfully), Toast.LENGTH_SHORT).show();
-                                MFGT.finish(RegisterActivity.this);
+                                MFGT.gotoLoginActivity(RegisterActivity.this);
                             }
                         });
                     } catch (final HyphenateException e) {

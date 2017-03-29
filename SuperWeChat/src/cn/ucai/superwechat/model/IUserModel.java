@@ -20,4 +20,8 @@ public interface IUserModel {
     登录
      */
     void login(Context context,String userName,String password,OnCompleteListener<String>listener);
+    /*
+    根据用户名查找用户信息
+     */
+    void loadUserInfo(Context context,String userName,OnCompleteListener<String>listener);
 }

@@ -6,13 +6,22 @@ import com.hyphenate.EMValueCallBack;
 import com.hyphenate.chat.EMClient;
 import cn.ucai.superwechat.SuperWeChatHelper;
 import cn.ucai.superwechat.SuperWeChatHelper.DataSyncListener;
+import cn.ucai.superwechat.bean.Result;
+import cn.ucai.superwechat.model.IUserModel;
+import cn.ucai.superwechat.model.OnCompleteListener;
+import cn.ucai.superwechat.model.UserModel;
+import cn.ucai.superwechat.utils.L;
 import cn.ucai.superwechat.utils.PreferenceManager;
+import cn.ucai.superwechat.utils.ResultUtils;
+
 import com.hyphenate.easeui.domain.EaseUser;
+import com.hyphenate.easeui.domain.User;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class UserProfileManager {
+	private static final String TAG = UserProfileManager.class.getSimpleName();
 
 	/**
 	 * application context
@@ -24,6 +33,7 @@ public class UserProfileManager {
 	 * again
 	 */
 	private boolean sdkInited = false;
+	IUserModel userModel;
 
 	/**
 	 * HuanXin sync contact nick and avatar listener
@@ -32,8 +42,8 @@ public class UserProfileManager {
 
 	private boolean isSyncingContactInfosWithServer = false;
 
-	private EaseUser currentUser;
-
+	private EaseUser currentUser;//环信服务器当前用户
+	private User currentAppUser;//App服务器当前用户
 	public UserProfileManager() {
 	}
 
@@ -44,6 +54,8 @@ public class UserProfileManager {
 		ParseManager.getInstance().onInit(context);
 		syncContactInfosListeners = new ArrayList<DataSyncListener>();
 		sdkInited = true;
+		userModel = new UserModel();
+		appContext = context;
 		return true;
 	}
 
@@ -139,10 +151,28 @@ public class UserProfileManager {
 		}
 		return avatarUrl;
 	}
+	public void asyncGetAppCurrentUserInfo() {
+		userModel.loadUserInfo(appContext,SuperWeChatHelper.getInstance().getCurrentUsernName(),
+				new OnCompleteListener<String>() {
+			@Override
+			public void onSuccess(String result) {
+				if (result != null){
+					Result res = ResultUtils.getResultFromJson(result, User.class);
+					if (res != null && res.isRetMsg()){
+						User user = (User) res.getRetData();
+						L.e(TAG,"asyncGetAppCurrentUserInfo(),user = " + user);
+					}
+				}
+			}
 
+			@Override
+			public void onError(String error) {
+
+			}
+		});
+	}
 	public void asyncGetCurrentUserInfo() {
 		ParseManager.getInstance().asyncGetCurrentUserInfo(new EMValueCallBack<EaseUser>() {
-
 			@Override
 			public void onSuccess(EaseUser value) {
 			    if(value != null){
@@ -150,13 +180,11 @@ public class UserProfileManager {
     				setCurrentUserAvatar(value.getAvatar());
 			    }
 			}
-
 			@Override
 			public void onError(int error, String errorMsg) {
 
 			}
 		});
-
 	}
 	public void asyncGetUserInfo(final String username,final EMValueCallBack<EaseUser> callback){
 		ParseManager.getInstance().asyncGetUserInfo(username, callback);
@@ -178,5 +206,4 @@ public class UserProfileManager {
 	private String getCurrentUserAvatar() {
 		return PreferenceManager.getInstance().getCurrentUserAvatar();
 	}
-
 }
