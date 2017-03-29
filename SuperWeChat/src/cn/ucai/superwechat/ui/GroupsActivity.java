@@ -17,7 +17,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v4.widget.SwipeRefreshLayout.OnRefreshListener;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnTouchListener;
@@ -83,7 +82,7 @@ public class GroupsActivity extends BaseActivity {
 		swipeRefreshLayout.setColorSchemeResources(R.color.holo_blue_bright, R.color.holo_green_light,
 		                R.color.holo_orange_light, R.color.holo_red_light);
 		//pull down to refresh
-		swipeRefreshLayout.setOnRefreshListener(new OnRefreshListener() {
+		swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
 
 			@Override
 			public void onRefresh() {
