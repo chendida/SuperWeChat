@@ -8,7 +8,9 @@ import android.support.v4.app.FragmentActivity;
 import java.util.ArrayList;
 
 import cn.ucai.superwechat.R;
+import cn.ucai.superwechat.ui.LoginActivity;
 import cn.ucai.superwechat.ui.MainActivity;
+import cn.ucai.superwechat.ui.RegisterActivity;
 import cn.ucai.superwechat.ui.WelcomeActivity;
 
 
@@ -41,5 +43,13 @@ public class MFGT {
 
     public static void gotoWelcomeActivity(Activity activity) {
         startActivity(activity,WelcomeActivity.class);
+    }
+
+    public static void gotoLoginActivity(Activity activity) {
+        startActivity(activity,LoginActivity.class);
+    }
+
+    public static void gotoRegisterActivity(Activity activity) {
+        startActivity(activity,RegisterActivity.class);
     }
 }
