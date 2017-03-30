@@ -168,7 +168,7 @@ public class UserProfileManager {
 						User user = (User) res.getRetData();
 						L.e(TAG,"asyncGetAppCurrentUserInfo(),user = " + user);
 						//将数据保存到首选项、内存和数据库中
-						savaUserInfo(user);
+
 					}
 				}
 			}
@@ -178,19 +178,6 @@ public class UserProfileManager {
 				L.e(TAG,"error = " + error);
 			}
 		});
-	}
-
-	private void savaUserInfo(final User user) {
-		L.e(TAG,"savaUserInfo,user = " + user);
-		SuperWeChatApplication.setUser(user);//保存到内存中
-		SharePrefrenceUtils.getInstance().setUserName(user.getMUserName());
-		new Thread(new Runnable() {
-			@Override
-			public void run() {
-				boolean b = UserDao.getInstance(appContext).saveUserInfo(user);
-				L.e(TAG,"savaUserInfo, b = " + b);
-			}
-		}).start();
 	}
 
 	public void asyncGetCurrentUserInfo() {

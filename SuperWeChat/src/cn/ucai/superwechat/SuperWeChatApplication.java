@@ -25,26 +25,11 @@ import cn.ucai.superwechat.db.UserDao;
 import cn.ucai.superwechat.utils.SharePrefrenceUtils;
 
 public class SuperWeChatApplication extends Application {
-
 	public static Context applicationContext;
 	private static SuperWeChatApplication instance;
-	static User user;
-
-	public static User getUser() {
-		if (user == null){
-			String userName = SharePrefrenceUtils.getInstance().getUserName();
-			Log.e("application","userName =" + userName);
-			User user = UserDao.getInstance(instance).getUserInfo(userName);
-		}
-		return user;
-	}
-
-	public static void setUser(User user) {
-		SuperWeChatApplication.user = user;
-	}
 	// login user name
 	public final String PREF_USERNAME = "username";
-	
+
 	/**
 	 * nickname for current user, the nickname instead of ID be shown when user receive notification from APNs
 	 */
@@ -54,11 +39,11 @@ public class SuperWeChatApplication extends Application {
 	public void onCreate() {
 		MultiDex.install(this);
 		super.onCreate();
-        applicationContext = this;
-        instance = this;
-        
-        //init demo helper
-        SuperWeChatHelper.getInstance().init(applicationContext);
+		applicationContext = this;
+		instance = this;
+
+		//init demo helper
+		SuperWeChatHelper.getInstance().init(applicationContext);
 		//red packet code : 初始化红包上下文，开启日志输出开关
 		RedPacket.getInstance().initContext(applicationContext);
 		RedPacket.getInstance().setDebugMode(true);

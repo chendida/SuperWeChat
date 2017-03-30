@@ -22,72 +22,19 @@ import java.util.List;
 import java.util.Map;
 
 public class SuperWeChatDBManager {
-    //static private SuperWeChatDBManager dbMgr = new SuperWeChatDBManager();
-    static DbOpenHelper dbHelper;
-    private static final String TAG = SuperWeChatDBManager.class.getSimpleName();
-    //DbOpenHelper mHelper;
-    static SuperWeChatDBManager dbManager;
-    public synchronized void initDB(Context context){
-        dbHelper = DbOpenHelper.getInstance(context);
-    }
-    public static SuperWeChatDBManager getInstance(){
-        if (dbManager != null){
-            return dbManager;
-        }
-        dbManager = new SuperWeChatDBManager();
-        return dbManager;
-    }
-    public boolean saveUserInfo(User user){
-        SQLiteDatabase database = dbHelper.getWritableDatabase();
-        if (database.isOpen()){
-            ContentValues values = new ContentValues();
-            values.put(UserDao.USER_COLUMN_NAME,user.getMUserName());
-            values.put(UserDao.USER_COLUMN_NICK,user.getMUserNick());
-            values.put(UserDao.USER_COLUMN_AVATAR,user.getMAvatarId());
-            values.put(UserDao.USER_COLUMN_AVATAR_PATH,user.getMAvatarPath());
-            values.put(UserDao.USER_COLUMN_AVATAR_TYPE,user.getMAvatarType());
-            values.put(UserDao.USER_COLUMN_AVATAR_SUFFIX,user.getMAvatarSuffix());
-            values.put(UserDao.USER_COLUMN_AVATAR_UPDATE_TIME,user.getMAvatarLastUpdateTime());
-            if (user != null) {
-                return database.replace(UserDao.USER_TABLE_NAME, null,values) != -1;
-            }
-            Log.e(TAG,"insert,user = " + user);
-        }
-        return false;
-    }
+    static private SuperWeChatDBManager dbMgr = new SuperWeChatDBManager();
+    private DbOpenHelper dbHelper;
 
-    public User getUserInfo(String userName){
-        SQLiteDatabase database = dbHelper.getReadableDatabase();
-        if (database.isOpen()){
-            String sql = "select * from " + UserDao.USER_TABLE_NAME + " where " +
-                    UserDao.USER_COLUMN_NAME +"= '" + userName +"'";
-            Cursor cursor = database.rawQuery(sql, null);
-            while (cursor.moveToNext()){
-                User user = new User();
-                user.setMUserName(userName);
-                user.setMUserNick(cursor.getString(cursor.getColumnIndex(UserDao.USER_COLUMN_NICK)));
-                user.setMAvatarId(cursor.getInt(cursor.getColumnIndex(UserDao.USER_COLUMN_AVATAR)));
-                user.setMAvatarPath(cursor.getString(cursor.getColumnIndex(UserDao.USER_COLUMN_AVATAR_PATH)));
-                user.setMAvatarType(cursor.getInt(cursor.getColumnIndex(UserDao.USER_COLUMN_AVATAR_TYPE)));
-                user.setMAvatarSuffix(cursor.getString(cursor.getColumnIndex(UserDao.USER_COLUMN_AVATAR_SUFFIX)));
-                user.setMAvatarLastUpdateTime(cursor.getString(cursor.getColumnIndex(UserDao.USER_COLUMN_AVATAR_UPDATE_TIME)));
-                return user;
-            }
-        }
-        return null;
-    }
-    
     private SuperWeChatDBManager(){
         dbHelper = DbOpenHelper.getInstance(SuperWeChatApplication.getInstance().getApplicationContext());
     }
-    
-    /*public static synchronized SuperWeChatDBManager getInstance(){
+
+    public static synchronized SuperWeChatDBManager getInstance(){
         if(dbMgr == null){
             dbMgr = new SuperWeChatDBManager();
         }
         return dbMgr;
-    }*/
-    
+    }
     /**
      * save contact list
      * 
@@ -358,7 +305,7 @@ public class SuperWeChatDBManager {
         if(dbHelper != null){
             dbHelper.closeDB();
         }
-        dbManager = null;
+        dbMgr = null;
     }
     
     
