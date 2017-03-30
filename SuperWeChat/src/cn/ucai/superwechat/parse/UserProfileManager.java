@@ -126,6 +126,7 @@ public class UserProfileManager {
 	public synchronized void reset() {
 		isSyncingContactInfosWithServer = false;
 		currentUser = null;
+		currentAppUser = null;
 		PreferenceManager.getInstance().removeCurrentUserInfo();
 	}
 
@@ -138,6 +139,16 @@ public class UserProfileManager {
 			currentUser.setAvatar(getCurrentUserAvatar());
 		}
 		return currentUser;
+	}
+	public synchronized User getCurrentAppUserInfo(){
+		if (currentAppUser == null){
+			String username = EMClient.getInstance().getCurrentUser();
+			currentAppUser = new User(username);
+			String nick = getCurrentUserNick();
+			currentAppUser.setMUserNick((nick != null) ? nick : username);
+			currentAppUser.setAvatar(getCurrentUserAvatar());
+		}
+		return currentAppUser;
 	}
 
 	public boolean updateCurrentUserNickName(final String nickname) {
@@ -168,11 +179,15 @@ public class UserProfileManager {
 						User user = (User) res.getRetData();
 						L.e(TAG,"asyncGetAppCurrentUserInfo(),user = " + user);
 						//将数据保存到首选项、内存和数据库中
-
+						if (user != null){
+							//SuperWeChatHelper.getInstance().saveAppContact(user);
+							setCurrentAppUserNick(user.getMUserNick());
+							L.e(TAG,"user.getMUserNick() = " + user.getMUserNick());
+							setCurrentAppUserAvatar(user.getAvatar());
+						}
 					}
 				}
 			}
-
 			@Override
 			public void onError(String error) {
 				L.e(TAG,"error = " + error);
@@ -205,6 +220,15 @@ public class UserProfileManager {
 
 	private void setCurrentUserAvatar(String avatar) {
 		getCurrentUserInfo().setAvatar(avatar);
+		PreferenceManager.getInstance().setCurrentUserAvatar(avatar);
+	}
+
+	private void setCurrentAppUserNick(String nickname){
+		getCurrentAppUserInfo().setMUserNick(nickname);
+		PreferenceManager.getInstance().setCurrentUserNick(nickname);
+	}
+	private void setCurrentAppUserAvatar(String avatar){
+		getCurrentAppUserInfo().setAvatar(avatar);
 		PreferenceManager.getInstance().setCurrentUserAvatar(avatar);
 	}
 

@@ -49,6 +49,7 @@ import com.hyphenate.easeui.controller.EaseUI.EaseUserProfileProvider;
 import com.hyphenate.easeui.domain.EaseEmojicon;
 import com.hyphenate.easeui.domain.EaseEmojiconGroupEntity;
 import com.hyphenate.easeui.domain.EaseUser;
+import com.hyphenate.easeui.domain.User;
 import com.hyphenate.easeui.model.EaseAtMessageHelper;
 import com.hyphenate.easeui.model.EaseNotifier;
 import com.hyphenate.easeui.model.EaseNotifier.EaseNotificationInfoProvider;
@@ -64,6 +65,7 @@ import java.util.Map;
 import java.util.UUID;
 
 public class SuperWeChatHelper {
+
     /**
      * data sync listener
      */
@@ -975,6 +977,10 @@ public class SuperWeChatHelper {
     public void saveContact(EaseUser user){
     	contactList.put(user.getUsername(), user);
     	superWeChatModel.saveContact(user);
+    }
+
+    public void saveAppContact(User user) {
+        //contactList.put(user.getMUserName(),user);
     }
     
     /**

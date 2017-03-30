@@ -12,6 +12,11 @@ public class User implements Serializable {
 	private String mavatarSuffix;
 	private Integer mavatarType;
 	private String mavatarLastUpdateTime;
+	private String avatar;
+
+	public void setAvatar(String avatar) {
+		this.avatar = avatar;
+	}
 
 	/**
 	 * initial letter for nickname

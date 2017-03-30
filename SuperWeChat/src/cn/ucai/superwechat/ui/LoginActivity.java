@@ -162,7 +162,7 @@ public class LoginActivity extends BaseActivity {
                     pd.dismiss();
                 }
                 // get user's info (this should be get from App's server or 3rd party service)
-                SuperWeChatHelper.getInstance().getUserProfileManager().asyncGetCurrentUserInfo();
+               // SuperWeChatHelper.getInstance().getUserProfileManager().asyncGetCurrentUserInfo();
                 SuperWeChatHelper.getInstance().getUserProfileManager().asyncGetAppCurrentUserInfo();
                 Intent intent = new Intent(LoginActivity.this,
                         MainActivity.class);
