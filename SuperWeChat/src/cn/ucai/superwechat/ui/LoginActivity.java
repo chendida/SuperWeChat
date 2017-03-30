@@ -163,7 +163,9 @@ public class LoginActivity extends BaseActivity {
                 }
                 // get user's info (this should be get from App's server or 3rd party service)
                // SuperWeChatHelper.getInstance().getUserProfileManager().asyncGetCurrentUserInfo();
+                //保存用户信息到内存和首选项中
                 SuperWeChatHelper.getInstance().getUserProfileManager().asyncGetAppCurrentUserInfo();
+                //SuperWeChatHelper.getInstance().saveAppContact();
                 Intent intent = new Intent(LoginActivity.this,
                         MainActivity.class);
                 startActivity(intent);

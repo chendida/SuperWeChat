@@ -142,11 +142,11 @@ public class UserProfileManager {
 	}
 	public synchronized User getCurrentAppUserInfo(){
 		if (currentAppUser == null){
-			String username = EMClient.getInstance().getCurrentUser();
-			currentAppUser = new User(username);
-			String nick = getCurrentUserNick();
-			currentAppUser.setMUserNick((nick != null) ? nick : username);
-			currentAppUser.setAvatar(getCurrentUserAvatar());
+			String username = EMClient.getInstance().getCurrentUser();//获取环信服务器上的用户名
+			currentAppUser = new User(username);//创建我们服务器所要保存的User对象
+			String nick = getCurrentUserNick();//获取环信服务器上的用户昵称
+			currentAppUser.setMUserNick((nick != null) ? nick : username);//设置服务器保存的用户昵称
+			currentAppUser.setAvatar(getCurrentUserAvatar());//设置服务器保存的用户头像
 		}
 		return currentAppUser;
 	}
@@ -180,10 +180,10 @@ public class UserProfileManager {
 						L.e(TAG,"asyncGetAppCurrentUserInfo(),user = " + user);
 						//将数据保存到首选项、内存和数据库中
 						if (user != null){
-							//SuperWeChatHelper.getInstance().saveAppContact(user);
 							setCurrentAppUserNick(user.getMUserNick());
 							L.e(TAG,"user.getMUserNick() = " + user.getMUserNick());
 							setCurrentAppUserAvatar(user.getAvatar());
+							SuperWeChatHelper.getInstance().saveAppContact(user);
 						}
 					}
 				}
@@ -224,12 +224,12 @@ public class UserProfileManager {
 	}
 
 	private void setCurrentAppUserNick(String nickname){
-		getCurrentAppUserInfo().setMUserNick(nickname);
-		PreferenceManager.getInstance().setCurrentUserNick(nickname);
+		getCurrentAppUserInfo().setMUserNick(nickname);//保存用户昵称到内存中
+		PreferenceManager.getInstance().setCurrentUserNick(nickname);//保存用户昵称到Shareprefrence中
 	}
 	private void setCurrentAppUserAvatar(String avatar){
-		getCurrentAppUserInfo().setAvatar(avatar);
-		PreferenceManager.getInstance().setCurrentUserAvatar(avatar);
+		getCurrentAppUserInfo().setAvatar(avatar);//保存用户头像到内存中
+		PreferenceManager.getInstance().setCurrentUserAvatar(avatar);//保存用户头像到Shareprefrence中
 	}
 
 	private String getCurrentUserNick() {
