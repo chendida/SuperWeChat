@@ -69,6 +69,7 @@ public class RegisterActivity extends BaseActivity {
 
     public void register(View view) {
         if(inputCheck()){
+            showDialog();
             signUpSuccess();
         }
     }
@@ -102,25 +103,28 @@ public class RegisterActivity extends BaseActivity {
     }
 
     private void signUpSuccess() {
-        showDialog();
         userModel.register(RegisterActivity.this, username, userNick,MD5.getMessageDigest(pwd),
                 new OnCompleteListener<String>() {
             @Override
             public void onSuccess(String result) {
-                Result res = ResultUtils.getResultFromJson(result, String.class);
-                if (res != null ){
-                    if (res.isRetMsg()){//注册成功
-                        Log.e(TAG,"register,res = " + res);
-                        CommonUtils.showShortToast(R.string.Registered_successfully);
-                        registerEmClient();
-                    }else {
-                        pd.dismiss();
-                        if (res.getRetCode() == I.MSG_REGISTER_USERNAME_EXISTS){
+                boolean success = false;
+                if (result != null ){
+                    Result res = ResultUtils.getResultFromJson(result, String.class);
+                    if (res != null) {
+                        if (res.isRetMsg()) {//注册成功
+                            Log.e(TAG, "register,res = " + res);
+                            CommonUtils.showShortToast(R.string.Registered_successfully);
+                            success = true;
+                            registerEmClient();
+                        } else if (res.getRetCode() == I.MSG_REGISTER_USERNAME_EXISTS) {
                             CommonUtils.showShortToast(R.string.User_already_exists);
-                        }else {
+                        } else {
                             CommonUtils.showShortToast(R.string.Registration_failed);
                         }
                     }
+                }
+                if (!success){
+                    pd.dismiss();
                 }
             }
 
@@ -147,8 +151,9 @@ public class RegisterActivity extends BaseActivity {
                         EMClient.getInstance().createAccount(username, MD5.getMessageDigest(pwd));
                         runOnUiThread(new Runnable() {
                             public void run() {
-                                if (!RegisterActivity.this.isFinishing())
+                                if (!RegisterActivity.this.isFinishing()) {
                                     pd.dismiss();
+                                }
                                 // save current user
                                 SuperWeChatHelper.getInstance().setCurrentUserName(username);
                                 Toast.makeText(getApplicationContext(), getResources().getString(R.string.Registered_successfully), Toast.LENGTH_SHORT).show();
@@ -184,10 +189,12 @@ public class RegisterActivity extends BaseActivity {
         userModel.unregister(RegisterActivity.this, username, new OnCompleteListener<String>() {
             @Override
             public void onSuccess(String result) {
+                pd.dismiss();
                 Log.e(TAG,"result = " + result);
             }
             @Override
             public void onError(String error) {
+                pd.dismiss();
                 Log.e(TAG,"error = " + error);
             }
         });
