@@ -305,6 +305,7 @@
     <string name="dl_waiting">请等待……</string>
     <string name="toast_updatenick_success">更新昵称成功!</string>
     <string name="toast_updatenick_fail">更新昵称失败!</string>
+    <string name="toast_no_updatenick">昵称未修改!</string>
     <string name="toast_updatephoto_success">更新头像成功!</string>
     <string name="toast_updatephoto_fail">更新头像失败!</string>
     <string name="quiting_the_chat_room">正在退出聊天室……</string>

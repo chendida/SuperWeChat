@@ -22,6 +22,7 @@ import com.bumptech.glide.Glide;
 import com.hyphenate.EMValueCallBack;
 import com.hyphenate.chat.EMClient;
 import com.hyphenate.easeui.domain.EaseUser;
+import com.hyphenate.easeui.domain.User;
 import com.hyphenate.easeui.utils.EaseUserUtils;
 
 import java.io.ByteArrayOutputStream;
@@ -29,11 +30,20 @@ import java.io.ByteArrayOutputStream;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import cn.ucai.superwechat.I;
 import cn.ucai.superwechat.R;
 import cn.ucai.superwechat.SuperWeChatHelper;
+import cn.ucai.superwechat.bean.Result;
+import cn.ucai.superwechat.model.IUserModel;
+import cn.ucai.superwechat.model.OnCompleteListener;
+import cn.ucai.superwechat.model.UserModel;
+import cn.ucai.superwechat.utils.CommonUtils;
+import cn.ucai.superwechat.utils.L;
+import cn.ucai.superwechat.utils.PreferenceManager;
+import cn.ucai.superwechat.utils.ResultUtils;
 
 public class UserProfileActivity extends BaseActivity implements OnClickListener {
-
+    private static final String TAG = UserProfileActivity.class.getSimpleName();
     private static final int REQUESTCODE_PICK = 1;
     private static final int REQUESTCODE_CUTTING = 2;
     @BindView(R.id.img_back)
@@ -46,22 +56,16 @@ public class UserProfileActivity extends BaseActivity implements OnClickListener
     TextView tvUserinfoNick;
     @BindView(R.id.tv_userinfo_name)
     TextView tvUserinfoName;
-    /* private ImageView headAvatar;
-     private ImageView headPhotoUpdate;
-     private ImageView iconRightArrow;
-     private TextView tvNickName;
-     private TextView tvUsername;*/
-    private ProgressDialog dialog;
-    //private RelativeLayout rlNickName;
 
+    private ProgressDialog dialog;
+    IUserModel userModel;
 
     @Override
     protected void onCreate(Bundle arg0) {
         super.onCreate(arg0);
         setContentView(R.layout.em_activity_user_profile);
         ButterKnife.bind(this);
-        initView();
-        initListener();
+        userModel = new UserModel();
     }
 
     private void initView() {
@@ -73,8 +77,15 @@ public class UserProfileActivity extends BaseActivity implements OnClickListener
     private void initListener() {
         String username = EMClient.getInstance().getCurrentUser();
         EaseUserUtils.setAppUserNick(username, tvUserinfoNick);
-        tvUserinfoName.setText(R.string.userinfo_txt_name + ": " + username);
+        tvUserinfoName.setText(R.string.userinfo_txt_name + " : " + username);
         EaseUserUtils.setAppUserAvatar(UserProfileActivity.this, username, ivUserinfoAvatar);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        initView();
+        initListener();
     }
 
     public void asyncFetchUserInfo(String username) {
@@ -108,7 +119,6 @@ public class UserProfileActivity extends BaseActivity implements OnClickListener
         builder.setTitle(R.string.dl_title_upload_photo);
         builder.setItems(new String[]{getString(R.string.dl_msg_take_photo), getString(R.string.dl_msg_local_upload)},
                 new DialogInterface.OnClickListener() {
-
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.dismiss();
                         switch (which) {
@@ -132,35 +142,51 @@ public class UserProfileActivity extends BaseActivity implements OnClickListener
 
     private void updateRemoteNick(final String nickName) {
         dialog = ProgressDialog.show(this, getString(R.string.dl_update_nick), getString(R.string.dl_waiting));
-        new Thread(new Runnable() {
+        userModel.updateUserNick(UserProfileActivity.this, EMClient.getInstance().getCurrentUser(),
+                nickName, new OnCompleteListener<String>() {
+                    @Override
+                    public void onSuccess(String str ) {
+                        L.e(TAG,"userModel.updateUserNick,str = " + str);
+                        dialog.dismiss();
+                        if (str != null){
+                            L.e(TAG,"userModel.updateUserNick,str1 = " + str);
+                            Result result = ResultUtils.getResultFromJson(str, User.class);
+                            if (result != null){
+                                L.e(TAG,"userModel.updateUserNick,result = " + result);
+                                if (result.isRetMsg()){
+                                    L.e(TAG,"userModel.updateUserNick,result.isRetMsg() = " + result.isRetMsg());
+                                    User user = (User) result.getRetData();
+                                    if (user != null){
+                                        if (PreferenceManager.getInstance().getCurrentUserNick().equals(nickName)){
+                                            CommonUtils.showShortToast(R.string.toast_no_updatenick);
+                                            return;
+                                        }
+                                        L.e(TAG,"userModel.updateUserNick,user111 = " + user);
+                                        //将用户昵称保存到首选项
+                                        PreferenceManager.getInstance().setCurrentUserNick(nickName);
+                                        //将用户信息保存到数据库
+                                        SuperWeChatHelper.getInstance().saveAppContact(user);
+                                        tvUserinfoNick.setText(nickName);
+                                        CommonUtils.showShortToast(R.string.toast_updatenick_success);
+                                    }
+                                }else {
+                                    /*if (result.getRetCode() == I.MSG_USER_SAME_NICK){
+                                        CommonUtils.showShortToast(R.string.toast_no_updatenick);
+                                    }else {*/
+                                        CommonUtils.showShortToast(R.string.toast_updatenick_fail);
+                                    /*}*/
+                                }
+                            }
+                        }
+                    }
 
-            @Override
-            public void run() {
-                boolean updatenick = SuperWeChatHelper.getInstance().getUserProfileManager().updateCurrentUserNickName(nickName);
-                if (UserProfileActivity.this.isFinishing()) {
-                    return;
-                }
-                if (!updatenick) {
-                    runOnUiThread(new Runnable() {
-                        public void run() {
-                            Toast.makeText(UserProfileActivity.this, getString(R.string.toast_updatenick_fail), Toast.LENGTH_SHORT)
-                                    .show();
-                            dialog.dismiss();
-                        }
-                    });
-                } else {
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            dialog.dismiss();
-                            Toast.makeText(UserProfileActivity.this, getString(R.string.toast_updatenick_success), Toast.LENGTH_SHORT)
-                                    .show();
-                            tvUserinfoName.setText(nickName);
-                        }
-                    });
-                }
-            }
-        }).start();
+                    @Override
+                    public void onError(String error) {
+                        dialog.dismiss();
+                        L.e(TAG,"userModel.updateUserNick,error = " + error);
+                        CommonUtils.showShortToast(R.string.toast_updatenick_fail);
+                    }
+                });
     }
 
     @Override
@@ -209,7 +235,6 @@ public class UserProfileActivity extends BaseActivity implements OnClickListener
             ivUserinfoAvatar.setImageDrawable(drawable);
             uploadUserAvatar(Bitmap2Bytes(photo));
         }
-
     }
 
     private void uploadUserAvatar(final byte[] data) {
@@ -260,12 +285,12 @@ public class UserProfileActivity extends BaseActivity implements OnClickListener
 
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                String nickString = editText.getText().toString();
-                                if (TextUtils.isEmpty(nickString)) {
+                                String nickName = editText.getText().toString();
+                                if (TextUtils.isEmpty(nickName)) {
                                     Toast.makeText(UserProfileActivity.this, getString(R.string.toast_nick_not_isnull), Toast.LENGTH_SHORT).show();
                                     return;
                                 }
-                                updateRemoteNick(nickString);
+                                updateRemoteNick(nickName);
                             }
                         }).setNegativeButton(R.string.dl_cancel, null).show();
                 break;
