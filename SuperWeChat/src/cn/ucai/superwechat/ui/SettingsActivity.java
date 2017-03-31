@@ -453,7 +453,10 @@ public class SettingsActivity extends BaseActivity implements OnClickListener {
                         pd.dismiss();
                         // show login screen
                         //MFGT.finish(SettingsActivity.this);
-                        MFGT.gotoLoginActivity(SettingsActivity.this);
+                        Intent intent = new Intent(SettingsActivity.this,LoginActivity.class);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+                        startActivity(intent);
+                        //MFGT.gotoLoginActivity(SettingsActivity.this);
                     }
                 });
             }

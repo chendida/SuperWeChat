@@ -1,5 +1,7 @@
 package cn.ucai.superwechat.utils;
 
+import android.os.Handler;
+import android.os.Message;
 import android.util.Log;
 
 import com.google.gson.Gson;

@@ -229,6 +229,6 @@ public class LoginActivity extends BaseActivity {
     }
 
     public void back(View view) {
-        LoginActivity.this.finish();
+        finish();
     }
 }
