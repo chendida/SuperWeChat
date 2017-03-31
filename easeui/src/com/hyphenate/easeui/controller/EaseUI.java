@@ -127,7 +127,6 @@ public final class EaseUI {
 
     protected EMOptions initChatOptions(){
         Log.d(TAG, "init HuanXin Options");
-
         EMOptions options = new EMOptions();
         // change to need confirm contact invitation
         options.setAcceptInvitationAlways(false);

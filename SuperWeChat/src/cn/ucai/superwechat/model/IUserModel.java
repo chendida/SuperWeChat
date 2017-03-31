@@ -2,6 +2,8 @@ package cn.ucai.superwechat.model;
 
 import android.content.Context;
 
+import java.io.File;
+
 /**
  * Created by Administrator on 2017/3/29.
  */
@@ -24,4 +26,13 @@ public interface IUserModel {
     根据用户名查找用户信息
      */
     void loadUserInfo(Context context,String userName,OnCompleteListener<String>listener);
+    /*
+    更新用户昵称
+     */
+    void updateUserNick(Context context,String userName,String userNick,OnCompleteListener<String>listener);
+
+    /*
+    更新用户头像
+     */
+    void updateUserAvatar(Context context, String userName,OnCompleteListener<String>listener);
 }
