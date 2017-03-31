@@ -9,6 +9,7 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.provider.MediaStore;
 import android.text.TextUtils;
 import android.view.View;
@@ -23,9 +24,15 @@ import com.hyphenate.EMValueCallBack;
 import com.hyphenate.chat.EMClient;
 import com.hyphenate.easeui.domain.EaseUser;
 import com.hyphenate.easeui.domain.User;
+import com.hyphenate.easeui.utils.EaseImageUtils;
 import com.hyphenate.easeui.utils.EaseUserUtils;
 
+import java.io.BufferedOutputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -170,13 +177,15 @@ public class UserProfileActivity extends BaseActivity implements OnClickListener
                                         CommonUtils.showShortToast(R.string.toast_updatenick_success);
                                     }
                                 }else {
-                                    /*if (result.getRetCode() == I.MSG_USER_SAME_NICK){
-                                        CommonUtils.showShortToast(R.string.toast_no_updatenick);
-                                    }else {*/
-                                        CommonUtils.showShortToast(R.string.toast_updatenick_fail);
-                                    /*}*/
+                                    CommonUtils.showShortToast(R.string.toast_updatenick_fail);
                                 }
                             }
+                            else {
+                                CommonUtils.showShortToast(R.string.toast_updatenick_fail);
+                            }
+                        }
+                        else {
+                            CommonUtils.showShortToast(R.string.toast_updatenick_fail);
                         }
                     }
 
@@ -200,13 +209,37 @@ public class UserProfileActivity extends BaseActivity implements OnClickListener
                 break;
             case REQUESTCODE_CUTTING:
                 if (data != null) {
-                    setPicToView(data);
+                    //setPicToView(data);
+                    uploadAppUserAvatar(data);
                 }
                 break;
             default:
                 break;
         }
         super.onActivityResult(requestCode, resultCode, data);
+    }
+
+    private void uploadAppUserAvatar(Intent data) {
+        File file = saveBitmapFile(data);
+    }
+
+    private File saveBitmapFile(Intent data) {
+        Bundle extras = data.getExtras();
+        if (extras != null){
+            Bitmap bitmap = extras.getParcelable("data");
+            String imagePath = EaseImageUtils.getImagePath(EMClient.getInstance().getCurrentUser() + I.AVATAR_SUFFIX_JPG);
+            File file = new File(imagePath);
+            try {
+                BufferedOutputStream bos = new BufferedOutputStream(new FileOutputStream(file));
+                bitmap.compress(Bitmap.CompressFormat.JPEG, 100, bos);
+                bos.flush();
+                bos.close();
+                } catch (IOException e) {
+                e.printStackTrace();
+                }
+            return file;
+        }
+        return null;
     }
 
     public void startPhotoZoom(Uri uri) {

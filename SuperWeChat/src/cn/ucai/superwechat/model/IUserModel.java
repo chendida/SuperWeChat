@@ -34,5 +34,5 @@ public interface IUserModel {
     /*
     更新用户头像
      */
-    void updateUserAvatar(Context context, String userName,OnCompleteListener<String>listener);
+    void updateUserAvatar(Context context, String userName,File file, OnCompleteListener<String>listener);
 }
