@@ -133,8 +133,8 @@ public class MainActivity extends BaseActivity
     private void initFragment() {
         conversationListFragment = new ConversationListFragment();
         contactListFragment = new ContactListFragment();
-        SettingsFragment settingFragment = new SettingsFragment();
-        fragments = new Fragment[]{conversationListFragment, contactListFragment, settingFragment};
+        MineFragment mineFragment = new MineFragment();
+        fragments = new Fragment[]{conversationListFragment, contactListFragment, mineFragment};
 
 		/*getSupportFragmentManager().beginTransaction().add(R.id.fragment_container, conversationListFragment)
                 .add(R.id.fragment_container, contactListFragment).hide(contactListFragment).show(conversationListFragment)
@@ -143,7 +143,7 @@ public class MainActivity extends BaseActivity
         adapter.addFragment(conversationListFragment, getString(R.string.app_name));
         adapter.addFragment(contactListFragment, getString(R.string.contacts));
         adapter.addFragment(new DicoverFragment(), getString(R.string.discover));
-        adapter.addFragment(settingFragment, getString(R.string.me));
+        adapter.addFragment(mineFragment, getString(R.string.me));
         layoutViewpage.setAdapter(adapter);
         layoutViewpage.setOnPageChangeListener(this);
         layoutTabhost.setOnCheckedChangeListener(this);
