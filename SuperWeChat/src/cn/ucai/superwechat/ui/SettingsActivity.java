@@ -1,10 +1,10 @@
 /**
  * Copyright (C) 2016 Hyphenate Inc. All rights reserved.
- * <p>
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * http://www.apache.org/licenses/LICENSE-2.0
+ *     http://www.apache.org/licenses/LICENSE-2.0
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -30,24 +30,19 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.easemob.redpacketui.utils.RedPacketUtil;
 import com.hyphenate.EMCallBack;
 import com.hyphenate.chat.EMClient;
 import com.hyphenate.chat.EMOptions;
+import cn.ucai.superwechat.SuperWeChatHelper;
+import cn.ucai.superwechat.SuperWeChatModel;
+import cn.ucai.superwechat.R;
+import cn.ucai.superwechat.utils.MFGT;
+import cn.ucai.superwechat.utils.PreferenceManager;
 import com.hyphenate.easeui.widget.EaseSwitchButton;
 import com.hyphenate.util.EMLog;
 
 import java.io.File;
 import java.util.ArrayList;
-
-import butterknife.BindView;
-import butterknife.ButterKnife;
-import cn.ucai.superwechat.Constant;
-import cn.ucai.superwechat.R;
-import cn.ucai.superwechat.SuperWeChatHelper;
-import cn.ucai.superwechat.SuperWeChatModel;
-import cn.ucai.superwechat.utils.MFGT;
-import cn.ucai.superwechat.utils.PreferenceManager;
 
 /**
  * settings screen
@@ -55,216 +50,167 @@ import cn.ucai.superwechat.utils.PreferenceManager;
  *
  */
 @SuppressWarnings({"FieldCanBeLocal"})
-public class SettingsActivity extends BaseActivity implements OnClickListener{
-    @BindView(R.id.ll_change)
-    LinearLayout llChange;
-    @BindView(R.id.rl_mail_log)
-    RelativeLayout rlMailLog;
-    @BindView(R.id.switch_notification)
-    EaseSwitchButton switchNotification;
-    @BindView(R.id.rl_switch_notification)
-    RelativeLayout rlSwitchNotification;
-    @BindView(R.id.textview1)
-    TextView textview1;
-    @BindView(R.id.switch_sound)
-    EaseSwitchButton switchSound;
-    @BindView(R.id.rl_switch_sound)
-    RelativeLayout rlSwitchSound;
-    @BindView(R.id.textview2)
-    TextView textview2;
-    @BindView(R.id.switch_vibrate)
-    EaseSwitchButton switchVibrate;
-    @BindView(R.id.rl_switch_vibrate)
-    RelativeLayout rlSwitchVibrate;
-    @BindView(R.id.rl_push_settings)
-    RelativeLayout rlPushSettings;
-    @BindView(R.id.switch_speaker)
-    EaseSwitchButton switchSpeaker;
-    @BindView(R.id.rl_switch_speaker)
-    RelativeLayout rlSwitchSpeaker;
-    @BindView(R.id.edit_custom_appkey)
-    EditText editCustomAppkey;
-    @BindView(R.id.switch_custom_appkey)
-    EaseSwitchButton switchCustomAppkey;
-    @BindView(R.id.rl_custom_appkey)
-    RelativeLayout rlCustomAppkey;
-    @BindView(R.id.switch_custom_server)
-    EaseSwitchButton switchCustomServer;
-    @BindView(R.id.rl_custom_server)
-    RelativeLayout rlCustomServer;
-    @BindView(R.id.ll_user_profile)
-    LinearLayout llUserProfile;
-    @BindView(R.id.ll_black_list)
-    LinearLayout llBlackList;
-    @BindView(R.id.ll_diagnose)
-    LinearLayout llDiagnose;
-    @BindView(R.id.ll_set_push_nick)
-    LinearLayout llSetPushNick;
-    @BindView(R.id.ll_call_option)
-    LinearLayout llCallOption;
-    @BindView(R.id.textview4)
-    TextView textview4;
-    @BindView(R.id.switch_owner_leave)
-    EaseSwitchButton switchOwnerLeave;
-    @BindView(R.id.rl_switch_chatroom_owner_leave)
-    RelativeLayout rlSwitchChatroomOwnerLeave;
-    @BindView(R.id.switch_delete_msg_when_exit_group)
-    EaseSwitchButton switchDeleteMsgWhenExitGroup;
-    @BindView(R.id.rl_switch_delete_msg_when_exit_group)
-    RelativeLayout rlSwitchDeleteMsgWhenExitGroup;
-    @BindView(R.id.switch_auto_accept_group_invitation)
-    EaseSwitchButton switchAutoAcceptGroupInvitation;
-    @BindView(R.id.rl_switch_auto_accept_group_invitation)
-    RelativeLayout rlSwitchAutoAcceptGroupInvitation;
-    @BindView(R.id.switch_adaptive_video_encode)
-    EaseSwitchButton switchAdaptiveVideoEncode;
-    @BindView(R.id.rl_switch_adaptive_video_encode)
-    RelativeLayout rlSwitchAdaptiveVideoEncode;
-    @BindView(R.id.btn_logout)
-    Button btnLogout;
+public class SettingsActivity extends BaseActivity implements OnClickListener {
 
-    private SuperWeChatModel settingsModel;
-    private EMOptions chatOptions;
-    /*
-	*//**
+    /**
      * new message notification
-     *//*
-	private RelativeLayout rl_switch_notification;
-	*//**
+     */
+    private RelativeLayout rl_switch_notification;
+    /**
      * sound
-     *//*
-	private RelativeLayout rl_switch_sound;
-	*//**
+     */
+    private RelativeLayout rl_switch_sound;
+    /**
      * vibration
-     *//*
-	private RelativeLayout rl_switch_vibrate;
-	*//**
+     */
+    private RelativeLayout rl_switch_vibrate;
+    /**
      * speaker
-     *//*
-	private RelativeLayout rl_switch_speaker;
+     */
+    private RelativeLayout rl_switch_speaker;
 
 
-	*//**
+    /**
      * line between sound and vibration
-     *//*
-	private TextView textview1, textview2;
+     */
+    private TextView textview1, textview2;
 
-	private LinearLayout blacklistContainer;
-	
-	private LinearLayout userProfileContainer;
-	
-	*//**
+    private LinearLayout blacklistContainer;
+
+
+    /**
      * logout
-     *//*
-	private Button logoutBtn;
+     */
+    private Button logoutBtn;
 
-	private RelativeLayout rl_switch_chatroom_leave;
-	
+    private RelativeLayout rl_switch_chatroom_leave;
+
     private RelativeLayout rl_switch_delete_msg_when_exit_group;
     private RelativeLayout rl_switch_auto_accept_group_invitation;
     private RelativeLayout rl_switch_adaptive_video_encode;
-	private RelativeLayout rl_custom_appkey;
+    private RelativeLayout rl_custom_appkey;
     private RelativeLayout rl_custom_server;
-	RelativeLayout rl_push_settings;
-	private LinearLayout   ll_call_option;
-	private RelativeLayout rl_mail_log;
-
-	*/
+    RelativeLayout rl_push_settings;
+    private LinearLayout   ll_call_option;
+    private RelativeLayout rl_mail_log;
 
     /**
      * Diagnose
-     *//*
-	private LinearLayout llDiagnose;
-	*/
+     */
+    private LinearLayout llDiagnose;
+    /**
+     * display name for APNs
+     */
+    private LinearLayout pushNick;
+
+    private EaseSwitchButton notifySwitch;
+    private EaseSwitchButton soundSwitch;
+    private EaseSwitchButton vibrateSwitch;
+    private EaseSwitchButton speakerSwitch;
+    private EaseSwitchButton ownerLeaveSwitch;
+    private EaseSwitchButton switch_delete_msg_when_exit_group;
+    private EaseSwitchButton switch_auto_accept_group_invitation;
+    private EaseSwitchButton switch_adaptive_video_encode;
+    private EaseSwitchButton customServerSwitch;
+    private EaseSwitchButton customAppkeySwitch;
+    private SuperWeChatModel settingsModel;
+    private EMOptions chatOptions;
+    private EditText edit_custom_appkey;
+
     @Override
-    public void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.em_fragment_conversation_settings);
-        ButterKnife.bind(this);
-        if (!TextUtils.isEmpty(EMClient.getInstance().getCurrentUser())) {
-            btnLogout.setText(getString(R.string.button_logout) + "(" + EMClient.getInstance().getCurrentUser() + ")");
+        if(savedInstanceState != null && savedInstanceState.getBoolean("isConflict", false))
+            return;
+        initView();
+        if(!TextUtils.isEmpty(EMClient.getInstance().getCurrentUser())){
+            logoutBtn.setText(getString(R.string.button_logout) + "(" + EMClient.getInstance().getCurrentUser() + ")");
         }
+
         settingsModel = SuperWeChatHelper.getInstance().getModel();
         chatOptions = EMClient.getInstance().getOptions();
+
+        setListener();
+        checked();
+    }
+
+    private void checked() {
         // the vibrate and sound notification are allowed or not?
         if (settingsModel.getSettingMsgNotification()) {
-            switchNotification.openSwitch();
+            notifySwitch.openSwitch();
         } else {
-            switchNotification.closeSwitch();
+            notifySwitch.closeSwitch();
         }
 
         // sound notification is switched on or not?
         if (settingsModel.getSettingMsgSound()) {
-            switchSound.openSwitch();
+            soundSwitch.openSwitch();
         } else {
-            switchSound.closeSwitch();
+            soundSwitch.closeSwitch();
         }
 
         // vibrate notification is switched on or not?
         if (settingsModel.getSettingMsgVibrate()) {
-            switchVibrate.openSwitch();
+            vibrateSwitch.openSwitch();
         } else {
-            switchVibrate.closeSwitch();
+            vibrateSwitch.closeSwitch();
         }
 
         // the speaker is switched on or not?
         if (settingsModel.getSettingMsgSpeaker()) {
-            switchSpeaker.openSwitch();
+            speakerSwitch.openSwitch();
         } else {
-            switchSpeaker.closeSwitch();
+            speakerSwitch.closeSwitch();
         }
 
         // if allow owner leave
-        if (settingsModel.isChatroomOwnerLeaveAllowed()) {
-            switchOwnerLeave.openSwitch();
-        } else {
-            switchOwnerLeave.closeSwitch();
+        if(settingsModel.isChatroomOwnerLeaveAllowed()){
+            ownerLeaveSwitch.openSwitch();
+        }else{
+            ownerLeaveSwitch.closeSwitch();
         }
 
         // delete messages when exit group?
-        if (settingsModel.isDeleteMessagesAsExitGroup()) {
-            switchDeleteMsgWhenExitGroup.openSwitch();
+        if(settingsModel.isDeleteMessagesAsExitGroup()){
+            switch_delete_msg_when_exit_group.openSwitch();
         } else {
-            switchDeleteMsgWhenExitGroup.closeSwitch();
+            switch_delete_msg_when_exit_group.closeSwitch();
         }
 
         if (settingsModel.isAutoAcceptGroupInvitation()) {
-            switchAutoAcceptGroupInvitation.openSwitch();
+            switch_auto_accept_group_invitation.openSwitch();
         } else {
-            switchAutoAcceptGroupInvitation.closeSwitch();
+            switch_auto_accept_group_invitation.closeSwitch();
         }
 
         if (settingsModel.isAdaptiveVideoEncode()) {
-            switchAdaptiveVideoEncode.openSwitch();
+            switch_adaptive_video_encode.openSwitch();
             EMClient.getInstance().callManager().getCallOptions().enableFixedVideoResolution(false);
         } else {
-            switchAdaptiveVideoEncode.closeSwitch();
+            switch_adaptive_video_encode.closeSwitch();
             EMClient.getInstance().callManager().getCallOptions().enableFixedVideoResolution(true);
         }
 
-        if (settingsModel.isCustomServerEnable()) {
-            switchCustomServer.openSwitch();
-        } else {
-            switchCustomServer.closeSwitch();
+        if(settingsModel.isCustomServerEnable()){
+            customServerSwitch.openSwitch();
+        }else{
+            customServerSwitch.closeSwitch();
         }
 
         if (settingsModel.isCustomAppkeyEnabled()) {
-            switchCustomAppkey.openSwitch();
+            customAppkeySwitch.openSwitch();
         } else {
-            switchCustomAppkey.closeSwitch();
+            customAppkeySwitch.closeSwitch();
         }
-        editCustomAppkey.setEnabled(settingsModel.isCustomAppkeyEnabled());
+        edit_custom_appkey.setEnabled(settingsModel.isCustomAppkeyEnabled());
 
-        editCustomAppkey.setText(settingsModel.getCutomAppkey());
-        editCustomAppkey.addTextChangedListener(new TextWatcher() {
+        edit_custom_appkey.setText(settingsModel.getCutomAppkey());
+        edit_custom_appkey.addTextChangedListener(new TextWatcher() {
             @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-            }
-
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
             @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-            }
-
+            public void onTextChanged(CharSequence s, int start, int before, int count) {}
             @Override
             public void afterTextChanged(Editable s) {
                 PreferenceManager.getInstance().setCustomAppkey(s.toString());
@@ -272,100 +218,156 @@ public class SettingsActivity extends BaseActivity implements OnClickListener{
         });
     }
 
+    private void setListener() {
+        blacklistContainer.setOnClickListener(this);
+        rl_switch_notification.setOnClickListener(this);
+        rl_switch_sound.setOnClickListener(this);
+        rl_switch_vibrate.setOnClickListener(this);
+        rl_switch_speaker.setOnClickListener(this);
+        customAppkeySwitch.setOnClickListener(this);
+        customServerSwitch.setOnClickListener(this);
+        rl_custom_server.setOnClickListener(this);
+        logoutBtn.setOnClickListener(this);
+        llDiagnose.setOnClickListener(this);
+        pushNick.setOnClickListener(this);
+        rl_switch_chatroom_leave.setOnClickListener(this);
+        rl_switch_delete_msg_when_exit_group.setOnClickListener(this);
+        rl_switch_auto_accept_group_invitation.setOnClickListener(this);
+        rl_switch_adaptive_video_encode.setOnClickListener(this);
+        rl_push_settings.setOnClickListener(this);
+        ll_call_option.setOnClickListener(this);
+        rl_mail_log.setOnClickListener(this);
+    }
+
+    private void initView() {
+        rl_switch_notification = (RelativeLayout) findViewById(R.id.rl_switch_notification);
+        rl_switch_sound = (RelativeLayout) findViewById(R.id.rl_switch_sound);
+        rl_switch_vibrate = (RelativeLayout) findViewById(R.id.rl_switch_vibrate);
+        rl_switch_speaker = (RelativeLayout) findViewById(R.id.rl_switch_speaker);
+        rl_switch_chatroom_leave = (RelativeLayout) findViewById(R.id.rl_switch_chatroom_owner_leave);
+        rl_switch_delete_msg_when_exit_group = (RelativeLayout) findViewById(R.id.rl_switch_delete_msg_when_exit_group);
+        rl_switch_auto_accept_group_invitation = (RelativeLayout) findViewById(R.id.rl_switch_auto_accept_group_invitation);
+        rl_switch_adaptive_video_encode = (RelativeLayout) findViewById(R.id.rl_switch_adaptive_video_encode);
+        rl_custom_appkey = (RelativeLayout) findViewById(R.id.rl_custom_appkey);
+        rl_custom_server = (RelativeLayout) findViewById(R.id.rl_custom_server);
+        rl_push_settings = (RelativeLayout) findViewById(R.id.rl_push_settings);
+
+        ll_call_option = (LinearLayout) findViewById(R.id.ll_call_option);
+
+        rl_mail_log = (RelativeLayout) findViewById(R.id.rl_mail_log);
+
+        notifySwitch = (EaseSwitchButton) findViewById(R.id.switch_notification);
+        soundSwitch = (EaseSwitchButton) findViewById(R.id.switch_sound);
+        vibrateSwitch = (EaseSwitchButton) findViewById(R.id.switch_vibrate);
+        speakerSwitch = (EaseSwitchButton) findViewById(R.id.switch_speaker);
+        ownerLeaveSwitch = (EaseSwitchButton) findViewById(R.id.switch_owner_leave);
+        switch_delete_msg_when_exit_group = (EaseSwitchButton) findViewById(R.id.switch_delete_msg_when_exit_group);
+        switch_auto_accept_group_invitation = (EaseSwitchButton) findViewById(R.id.switch_auto_accept_group_invitation);
+        switch_adaptive_video_encode = (EaseSwitchButton) findViewById(R.id.switch_adaptive_video_encode);
+        logoutBtn = (Button) findViewById(R.id.btn_logout);
+
+        customServerSwitch = (EaseSwitchButton) findViewById(R.id.switch_custom_server);
+        customAppkeySwitch = (EaseSwitchButton) findViewById(R.id.switch_custom_appkey);
+
+        textview1 = (TextView) findViewById(R.id.textview1);
+        textview2 = (TextView) findViewById(R.id.textview2);
+
+        blacklistContainer = (LinearLayout) findViewById(R.id.ll_black_list);
+        llDiagnose=(LinearLayout) findViewById(R.id.ll_diagnose);
+        pushNick=(LinearLayout) findViewById(R.id.ll_set_push_nick);
+        edit_custom_appkey = (EditText) findViewById(R.id.edit_custom_appkey);
+    }
+
+
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            //red packet code : 进入零钱页面
-            case R.id.ll_change:
-                RedPacketUtil.startChangeActivity(SettingsActivity.this);
-                break;
-            //end of red packet code
             case R.id.rl_switch_notification:
-                if (switchNotification.isSwitchOpen()) {
-                    switchNotification.closeSwitch();
-                    rlSwitchSound.setVisibility(View.GONE);
-                    switchVibrate.setVisibility(View.GONE);
+                if (notifySwitch.isSwitchOpen()) {
+                    notifySwitch.closeSwitch();
+                    rl_switch_sound.setVisibility(View.GONE);
+                    rl_switch_vibrate.setVisibility(View.GONE);
                     textview1.setVisibility(View.GONE);
                     textview2.setVisibility(View.GONE);
                     settingsModel.setSettingMsgNotification(false);
                 } else {
-                    switchNotification.openSwitch();
-                    rlSwitchSound.setVisibility(View.VISIBLE);
-                    switchVibrate.setVisibility(View.VISIBLE);
+                    notifySwitch.openSwitch();
+                    rl_switch_sound.setVisibility(View.VISIBLE);
+                    rl_switch_vibrate.setVisibility(View.VISIBLE);
                     textview1.setVisibility(View.VISIBLE);
                     textview2.setVisibility(View.VISIBLE);
                     settingsModel.setSettingMsgNotification(true);
                 }
                 break;
             case R.id.rl_switch_sound:
-                if (switchSound.isSwitchOpen()) {
-                    switchSound.closeSwitch();
+                if (soundSwitch.isSwitchOpen()) {
+                    soundSwitch.closeSwitch();
                     settingsModel.setSettingMsgSound(false);
                 } else {
-                    switchSound.openSwitch();
+                    soundSwitch.openSwitch();
                     settingsModel.setSettingMsgSound(true);
                 }
                 break;
             case R.id.rl_switch_vibrate:
-                if (switchVibrate.isSwitchOpen()) {
-                    switchVibrate.closeSwitch();
+                if (vibrateSwitch.isSwitchOpen()) {
+                    vibrateSwitch.closeSwitch();
                     settingsModel.setSettingMsgVibrate(false);
                 } else {
-                    switchVibrate.openSwitch();
+                    vibrateSwitch.openSwitch();
                     settingsModel.setSettingMsgVibrate(true);
                 }
                 break;
             case R.id.rl_switch_speaker:
-                if (switchSpeaker.isSwitchOpen()) {
-                    switchSpeaker.closeSwitch();
+                if (speakerSwitch.isSwitchOpen()) {
+                    speakerSwitch.closeSwitch();
                     settingsModel.setSettingMsgSpeaker(false);
                 } else {
-                    switchSpeaker.openSwitch();
+                    speakerSwitch.openSwitch();
                     settingsModel.setSettingMsgVibrate(true);
                 }
                 break;
             case R.id.rl_switch_chatroom_owner_leave:
-                if (switchOwnerLeave.isSwitchOpen()) {
-                    switchOwnerLeave.closeSwitch();
+                if(ownerLeaveSwitch.isSwitchOpen()){
+                    ownerLeaveSwitch.closeSwitch();
                     settingsModel.allowChatroomOwnerLeave(false);
                     chatOptions.allowChatroomOwnerLeave(false);
-                } else {
-                    switchOwnerLeave.openSwitch();
+                }else{
+                    ownerLeaveSwitch.openSwitch();
                     settingsModel.allowChatroomOwnerLeave(true);
                     chatOptions.allowChatroomOwnerLeave(true);
                 }
                 break;
             case R.id.rl_switch_delete_msg_when_exit_group:
-                if (switchDeleteMsgWhenExitGroup.isSwitchOpen()) {
-                    switchDeleteMsgWhenExitGroup.closeSwitch();
+                if(switch_delete_msg_when_exit_group.isSwitchOpen()){
+                    switch_delete_msg_when_exit_group.closeSwitch();
                     settingsModel.setDeleteMessagesAsExitGroup(false);
                     chatOptions.setDeleteMessagesAsExitGroup(false);
-                } else {
-                    switchDeleteMsgWhenExitGroup.openSwitch();
+                }else{
+                    switch_delete_msg_when_exit_group.openSwitch();
                     settingsModel.setDeleteMessagesAsExitGroup(true);
                     chatOptions.setDeleteMessagesAsExitGroup(true);
                 }
                 break;
             case R.id.rl_switch_auto_accept_group_invitation:
-                if (switchAutoAcceptGroupInvitation.isSwitchOpen()) {
-                    switchAutoAcceptGroupInvitation.closeSwitch();
+                if(switch_auto_accept_group_invitation.isSwitchOpen()){
+                    switch_auto_accept_group_invitation.closeSwitch();
                     settingsModel.setAutoAcceptGroupInvitation(false);
                     chatOptions.setAutoAcceptGroupInvitation(false);
-                } else {
-                    switchAutoAcceptGroupInvitation.openSwitch();
+                }else{
+                    switch_auto_accept_group_invitation.openSwitch();
                     settingsModel.setAutoAcceptGroupInvitation(true);
                     chatOptions.setAutoAcceptGroupInvitation(true);
                 }
                 break;
             case R.id.rl_switch_adaptive_video_encode:
-                EMLog.d("switch", "" + !switchAdaptiveVideoEncode.isSwitchOpen());
-                if (switchAdaptiveVideoEncode.isSwitchOpen()) {
-                    switchAdaptiveVideoEncode.closeSwitch();
+                EMLog.d("switch", "" + !switch_adaptive_video_encode.isSwitchOpen());
+                if (switch_adaptive_video_encode.isSwitchOpen()){
+                    switch_adaptive_video_encode.closeSwitch();
                     settingsModel.setAdaptiveVideoEncode(false);
                     EMClient.getInstance().callManager().getCallOptions().enableFixedVideoResolution(true);
 
-                } else {
-                    switchAdaptiveVideoEncode.openSwitch();
+                }else{
+                    switch_adaptive_video_encode.openSwitch();
                     settingsModel.setAdaptiveVideoEncode(true);
                     EMClient.getInstance().callManager().getCallOptions().enableFixedVideoResolution(false);
                 }
@@ -385,28 +387,24 @@ public class SettingsActivity extends BaseActivity implements OnClickListener{
             case R.id.ll_call_option:
                 startActivity(new Intent(SettingsActivity.this, CallOptionActivity.class));
                 break;
-            case R.id.ll_user_profile:
-                startActivity(new Intent(SettingsActivity.this, UserProfileActivity.class).putExtra("setting", true)
-                        .putExtra("username", EMClient.getInstance().getCurrentUser()));
-                break;
             case R.id.switch_custom_server:
-                if (switchCustomServer.isSwitchOpen()) {
-                    switchCustomServer.closeSwitch();
+                if(customServerSwitch.isSwitchOpen()){
+                    customServerSwitch.closeSwitch();
                     settingsModel.enableCustomServer(false);
-                } else {
-                    switchCustomServer.openSwitch();
+                }else{
+                    customServerSwitch.openSwitch();
                     settingsModel.enableCustomServer(true);
                 }
                 break;
             case R.id.switch_custom_appkey:
-                if (switchCustomAppkey.isSwitchOpen()) {
-                    switchCustomAppkey.closeSwitch();
+                if(customAppkeySwitch.isSwitchOpen()){
+                    customAppkeySwitch.closeSwitch();
                     settingsModel.enableCustomAppkey(false);
-                } else {
-                    switchCustomAppkey.openSwitch();
+                }else{
+                    customAppkeySwitch.openSwitch();
                     settingsModel.enableCustomAppkey(true);
                 }
-                editCustomAppkey.setEnabled(switchCustomAppkey.isSwitchOpen());
+                edit_custom_appkey.setEnabled(customAppkeySwitch.isSwitchOpen());
                 break;
             case R.id.rl_custom_server:
                 startActivity(new Intent(SettingsActivity.this, SetServersActivity.class));
@@ -428,7 +426,7 @@ public class SettingsActivity extends BaseActivity implements OnClickListener{
         pd.setMessage(st);
         pd.setCanceledOnTouchOutside(false);
         pd.show();
-        SuperWeChatHelper.getInstance().logout(false, new EMCallBack() {
+        SuperWeChatHelper.getInstance().logout(false,new EMCallBack() {
 
             @Override
             public void onSuccess() {
@@ -436,9 +434,8 @@ public class SettingsActivity extends BaseActivity implements OnClickListener{
                     public void run() {
                         pd.dismiss();
                         // show login screen
-                        MFGT.finish(SettingsActivity.this);
+                        //MFGT.finish(SettingsActivity.this);
                         MFGT.gotoLoginActivity(SettingsActivity.this);
-
                     }
                 });
             }
@@ -498,7 +495,7 @@ public class SettingsActivity extends BaseActivity implements OnClickListener{
                 intent.setType("application/octet-stream");
                 ArrayList<Uri> uris = new ArrayList<>();
                 uris.add(Uri.fromFile(temp));
-                intent.putParcelableArrayListExtra(Intent.EXTRA_STREAM, uris);
+                intent.putParcelableArrayListExtra(Intent.EXTRA_STREAM,uris);
                 startActivity(intent);
             } catch (final Exception e) {
                 e.printStackTrace();
