@@ -58,7 +58,7 @@
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
                     android:layout_marginRight="20dp"
-                    android:src="@drawable/icon_me_photo" />
+                    android:src="@drawable/qrcode" />
 
             </RelativeLayout>
 

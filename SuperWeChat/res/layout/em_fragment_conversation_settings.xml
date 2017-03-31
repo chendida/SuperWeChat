@@ -515,7 +515,7 @@
                     android:layout_centerVertical="true" />
             </RelativeLayout>
 
-            
+
             <RelativeLayout
                 android:id="@+id/rl_switch_delete_msg_when_exit_group"
                 android:layout_width="match_parent"
@@ -540,7 +540,7 @@
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true" />
             </RelativeLayout>
-            
+
             <RelativeLayout
                 android:id="@+id/rl_switch_auto_accept_group_invitation"
                 android:layout_width="match_parent"
@@ -565,7 +565,7 @@
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true" />
             </RelativeLayout>
-            
+
             <RelativeLayout
                 android:id="@+id/rl_switch_adaptive_video_encode"
                 android:layout_width="match_parent"
