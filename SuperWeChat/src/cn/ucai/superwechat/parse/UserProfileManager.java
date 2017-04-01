@@ -141,7 +141,7 @@ public class UserProfileManager {
 		return currentUser;
 	}
 	public synchronized User getCurrentAppUserInfo(){
-		if (currentAppUser == null){
+		if (currentAppUser == null || currentAppUser.getMUserName() == null){
 			String username = EMClient.getInstance().getCurrentUser();//获取环信服务器上的用户名
 			currentAppUser = new User(username);//创建我们服务器所要保存的User对象
 			String nick = getCurrentUserNick();//获取环信服务器上的用户昵称
