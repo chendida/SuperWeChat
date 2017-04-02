@@ -1,10 +1,13 @@
 package cn.ucai.superwechat.parse;
 
 import android.content.Context;
+import android.content.Intent;
 
 import com.hyphenate.EMValueCallBack;
 import com.hyphenate.chat.EMClient;
 
+import cn.ucai.superwechat.I;
+import cn.ucai.superwechat.R;
 import cn.ucai.superwechat.SuperWeChatApplication;
 import cn.ucai.superwechat.SuperWeChatHelper;
 import cn.ucai.superwechat.SuperWeChatHelper.DataSyncListener;
@@ -13,6 +16,8 @@ import cn.ucai.superwechat.db.UserDao;
 import cn.ucai.superwechat.model.IUserModel;
 import cn.ucai.superwechat.model.OnCompleteListener;
 import cn.ucai.superwechat.model.UserModel;
+import cn.ucai.superwechat.ui.UserProfileActivity;
+import cn.ucai.superwechat.utils.CommonUtils;
 import cn.ucai.superwechat.utils.L;
 import cn.ucai.superwechat.utils.PreferenceManager;
 import cn.ucai.superwechat.utils.ResultUtils;
@@ -20,7 +25,9 @@ import cn.ucai.superwechat.utils.SharePrefrenceUtils;
 
 import com.hyphenate.easeui.domain.EaseUser;
 import com.hyphenate.easeui.domain.User;
+import com.hyphenate.easeui.utils.EaseUserUtils;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -159,12 +166,43 @@ public class UserProfileManager {
 		return isSuccess;
 	}
 
-	public String uploadUserAvatar(byte[] data) {
-		String avatarUrl = ParseManager.getInstance().uploadParseAvatar(data);
+	public void uploadUserAvatar(File file) {
+		userModel.updateUserAvatar(appContext, EMClient.getInstance().getCurrentUser(), file,
+				new OnCompleteListener<String>() {
+					@Override
+					public void onSuccess(String r) {
+						L.e(TAG, "uploadAppUserAvatar,r = " + r);
+						boolean success = false;
+						if (r != null) {
+							Result result = ResultUtils.getResultFromJson(r, User.class);
+							L.e(TAG, "uploadAppUserAvatar,result = " + result);
+							if (result != null && result.isRetMsg()) {
+								final User user = (User) result.getRetData();
+								L.e(TAG, "uploadAppUserAvatar,user = " + user);
+								if (user != null) {
+									success = true;
+									L.e(TAG, "uploadAppUserAvatar,user = " + user);
+									setCurrentAppUserAvatar(user.getAvatar());
+									SuperWeChatHelper.getInstance().saveAppContact(user);
+								}
+							}
+						}
+						appContext.sendBroadcast(new Intent(I.REQUEST_UPDATE_AVATAR)
+								.putExtra(I.Avatar.UPDATE_TIME, success));
+					}
+
+					@Override
+					public void onError(String error) {
+						L.e(TAG,"onError,error = " + error);
+						appContext.sendBroadcast(new Intent(I.REQUEST_UPDATE_AVATAR)
+								.putExtra(I.Avatar.UPDATE_TIME, false));
+					}
+				});
+		/*String avatarUrl = ParseManager.getInstance().uploadParseAvatar(data);
 		if (avatarUrl != null) {
 			setCurrentUserAvatar(avatarUrl);
 		}
-		return avatarUrl;
+		return avatarUrl;*/
 	}
 	public void asyncGetAppCurrentUserInfo() {
 		userModel.loadUserInfo(appContext,EMClient.getInstance().getCurrentUser(),
@@ -180,6 +218,7 @@ public class UserProfileManager {
 						L.e(TAG,"asyncGetAppCurrentUserInfo(),user = " + user);
 						//将数据保存到首选项、内存和数据库中
 						if (user != null){
+							currentAppUser = user;
 							setCurrentAppUserNick(user.getMUserNick());
 							L.e(TAG,"user.getMUserNick() = " + user.getMUserNick());
 							setCurrentAppUserAvatar(user.getAvatar());

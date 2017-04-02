@@ -69,8 +69,8 @@ public class UserModel implements IUserModel {
                 .addParam(I.NAME_OR_HXID,userName)
                 .addParam(I.AVATAR_TYPE,I.AVATAR_TYPE_USER_PATH)
                 .addFile2(file)
-                .post()
                 .targetClass(String.class)
+                .post()
                 .execute(listener);
     }
 }

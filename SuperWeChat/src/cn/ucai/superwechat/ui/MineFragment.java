@@ -50,6 +50,11 @@ public class MineFragment extends Fragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
         initData();
     }
 
@@ -80,8 +85,6 @@ public class MineFragment extends Fragment {
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.layout_profile_view:
-                /*startActivity(new Intent(getActivity(), UserProfileActivity.class).putExtra("setting", true)
-                        .putExtra("username", EMClient.getInstance().getCurrentUser()));*/
                 MFGT.gotoUserProfileActivity(getActivity());
                 break;
             case R.id.tv_profile_money:
