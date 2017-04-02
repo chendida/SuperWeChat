@@ -193,10 +193,6 @@ public class UserProfileActivity extends BaseActivity implements OnClickListener
                                     L.e(TAG,"userModel.updateUserNick,result.isRetMsg() = " + result.isRetMsg());
                                     User user = (User) result.getRetData();
                                     if (user != null){
-                                        if (PreferenceManager.getInstance().getCurrentUserNick().equals(nickName)){
-                                            CommonUtils.showShortToast(R.string.toast_no_updatenick);
-                                            return;
-                                        }
                                         L.e(TAG,"userModel.updateUserNick,user111 = " + user);
                                         //将用户昵称保存到首选项
                                         PreferenceManager.getInstance().setCurrentUserNick(nickName);
@@ -245,38 +241,6 @@ public class UserProfileActivity extends BaseActivity implements OnClickListener
                 break;
         }
         super.onActivityResult(requestCode, resultCode, data);
-    }
-    /**
-     * 保存头像至sd卡的Android文件夹，并显示头像
-     *
-     * @param ivAvatar
-     * @param data
-     */
-    private File saveCropAndShowAvatar(ImageView ivAvatar, Intent data) {
-        L.e(TAG, "data = " + data);
-        Bundle extras = data.getExtras();
-        L.e(TAG, "extras = " + extras);
-        Bitmap avatar = extras.getParcelable("data");
-        if (avatar == null) {
-            return null;
-        }
-        ivAvatar.setImageBitmap(avatar);
-        File dir = UserProfileActivity.this.getExternalFilesDir(Environment.DIRECTORY_PICTURES);
-        File file = new File(dir,getAvatarName()+".jpg");
-        L.e(TAG, "file = " + file.getAbsolutePath());
-        if (!file.getParentFile().exists()) {
-            Toast.makeText(UserProfileActivity.this, "照片保存失败,保存的路径不存在", Toast.LENGTH_LONG).show();
-            return null;
-        }
-        FileOutputStream out = null;
-        try {
-            out = new FileOutputStream(file);
-            avatar.compress(Bitmap.CompressFormat.JPEG, 100, out);
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-            Log.i("main", "头像保存失败");
-        }
-        return file;
     }
 
 
@@ -351,6 +315,10 @@ public class UserProfileActivity extends BaseActivity implements OnClickListener
                                 String nickName = editText.getText().toString();
                                 if (TextUtils.isEmpty(nickName)) {
                                     Toast.makeText(UserProfileActivity.this, getString(R.string.toast_nick_not_isnull), Toast.LENGTH_SHORT).show();
+                                    return;
+                                }
+                                if (PreferenceManager.getInstance().getCurrentUserNick().equals(nickName)){
+                                    CommonUtils.showShortToast(R.string.toast_no_updatenick);
                                     return;
                                 }
                                 updateRemoteNick(nickName);
