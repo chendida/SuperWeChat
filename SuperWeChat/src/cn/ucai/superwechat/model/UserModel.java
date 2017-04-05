@@ -73,4 +73,24 @@ public class UserModel implements IUserModel {
                 .post()
                 .execute(listener);
     }
+
+    @Override
+    public void addContact(Context context, String userName, String contactName, OnCompleteListener<String> listener) {
+        OkHttpUtils<String>utils = new OkHttpUtils<>(context);
+        utils.setRequestUrl(I.REQUEST_ADD_CONTACT)
+                .addParam(I.Contact.USER_NAME,userName)
+                .addParam(I.Contact.CU_NAME,contactName)
+                .targetClass(String.class)
+                .execute(listener);
+    }
+
+    @Override
+    public void deleteContact(Context context, String userName, String contactName, OnCompleteListener<String> listener) {
+        OkHttpUtils<String>utils = new OkHttpUtils<>(context);
+        utils.setRequestUrl(I.REQUEST_DELETE_CONTACT)
+                .addParam(I.Contact.USER_NAME,userName)
+                .addParam(I.Contact.CU_NAME,contactName)
+                .targetClass(String.class)
+                .execute(listener);
+    }
 }

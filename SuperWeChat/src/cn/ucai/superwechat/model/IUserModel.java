@@ -35,4 +35,12 @@ public interface IUserModel {
     更新用户头像
      */
     void updateUserAvatar(Context context, String userName,File file, OnCompleteListener<String>listener);
+    /*
+    添加好友
+     */
+    void addContact(Context context, String userName,String contactName, OnCompleteListener<String>listener);
+    /*
+    删除好友
+     */
+    void deleteContact(Context context, String userName,String contactName, OnCompleteListener<String>listener);
 }
