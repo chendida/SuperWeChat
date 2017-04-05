@@ -45,8 +45,9 @@
         android:protectionLevel="signatureOrSystem" />
 
     <uses-permission android:name="cn.ucai.superwechat.permission.MIPUSH_RECEIVE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" /> <!-- <android:uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" /> -->
+    <!-- <android:uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" /> -->
     <application
         android:name=".SuperWeChatApplication"
         android:allowBackup="true"
@@ -508,7 +509,8 @@
             android:value="3ecea51f560650b1ed8a4b99808f52e8" />
 
         <activity android:name=".ui.WelcomeActivity" />
-        <activity android:name=".ui.FirentProfileActivity"></activity>
+        <activity android:name=".ui.FirentProfileActivity" />
+        <activity android:name=".ui.SendAddFirentActivity"></activity>
     </application>
 
 </manifest>

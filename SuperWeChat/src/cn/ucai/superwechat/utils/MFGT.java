@@ -16,6 +16,7 @@ import cn.ucai.superwechat.ui.FirentProfileActivity;
 import cn.ucai.superwechat.ui.LoginActivity;
 import cn.ucai.superwechat.ui.MainActivity;
 import cn.ucai.superwechat.ui.RegisterActivity;
+import cn.ucai.superwechat.ui.SendAddFirentActivity;
 import cn.ucai.superwechat.ui.SettingsActivity;
 import cn.ucai.superwechat.ui.UserProfileActivity;
 import cn.ucai.superwechat.ui.WelcomeActivity;
@@ -75,5 +76,10 @@ public class MFGT {
     public static void gotoFrientProfileActivity(Activity activity, User user) {
         startActivity(activity, new Intent(activity,FirentProfileActivity.class)
         .putExtra(I.User.USER_NAME,user));
+    }
+
+    public static void gotoSendAddFirentActivity(Activity activity, String userName) {
+        startActivity(activity,new Intent(activity, SendAddFirentActivity.class)
+        .putExtra(I.User.USER_NAME,userName));
     }
 }

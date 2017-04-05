@@ -123,6 +123,7 @@
     <string name="retry_str">"%1$s 秒后重试"</string>
     <string name="my_change">我的零钱(余额￥%1$s)</string>
     <string name="str_my_change">我的零钱</string>
+    <string name="str_send_broadcast">申请通知</string>
     <string name="change_detail">零钱明细</string>
     <string name="withdraw_bankcard">到账银行卡</string>
     <string name="withdraw_amount">提现金额</string>

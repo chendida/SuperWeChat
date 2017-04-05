@@ -1,5 +1,6 @@
 package cn.ucai.superwechat.ui;
 
+import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -11,6 +12,7 @@ import com.hyphenate.easeui.utils.EaseUserUtils;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import cn.ucai.superwechat.I;
 import cn.ucai.superwechat.R;
 import cn.ucai.superwechat.SuperWeChatHelper;
@@ -35,6 +37,7 @@ public class FirentProfileActivity extends BaseActivity {
     Button btnSendMsg;
     @BindView(R.id.btn_send_video)
     Button btnSendVideo;
+    private ProgressDialog progressDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,5 +74,32 @@ public class FirentProfileActivity extends BaseActivity {
 
     public boolean isFirent() {
         return SuperWeChatHelper.getInstance().getAppContactList().containsKey(user.getMUserName());
+    }
+
+    @OnClick({R.id.btn_add_contact, R.id.btn_send_msg, R.id.btn_send_video})
+    public void onClick(View view) {
+        switch (view.getId()) {
+            case R.id.btn_add_contact:
+                addContact();
+                break;
+            case R.id.btn_send_msg:
+                break;
+            case R.id.btn_send_video:
+                break;
+        }
+    }
+
+    private void addContact() {
+        boolean isConfirm = true;
+        if (isConfirm){
+            MFGT.gotoSendAddFirentActivity(FirentProfileActivity.this, user.getMUserName());
+        }else {
+            MFGT.finish(FirentProfileActivity.this);
+        }
+    }
+
+    @OnClick(R.id.img_back)
+    public void onClick() {
+        MFGT.finish(FirentProfileActivity.this);
     }
 }
