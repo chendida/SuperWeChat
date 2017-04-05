@@ -350,7 +350,9 @@ public class UserProfileActivity extends BaseActivity implements OnClickListener
         return folder.getAbsolutePath();
     }
     private String getAvatarName(){
-        avatarName = user.getMUserName() + System.currentTimeMillis();
+        if (user != null) {
+            avatarName = user.getMUserName() + System.currentTimeMillis();
+        }
         return avatarName;
     }
 }

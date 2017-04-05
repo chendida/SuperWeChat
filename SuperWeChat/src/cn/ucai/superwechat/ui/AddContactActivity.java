@@ -50,6 +50,7 @@ public class AddContactActivity extends BaseActivity {
     private String toAddUsername;
     private ProgressDialog progressDialog;
     IUserModel userModel;
+    User userInfo;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -77,6 +78,7 @@ public class AddContactActivity extends BaseActivity {
      */
     public void searchContact(View v) {
         final String name = editText.getText().toString();
+        showDialog();
         seachUserInfo(name);
     }
 
@@ -84,6 +86,11 @@ public class AddContactActivity extends BaseActivity {
         if (checkInput(name)) {
             findUserInfo(name);
         }
+    }
+    private void showDialog(){
+        progressDialog = new ProgressDialog(AddContactActivity.this);
+        progressDialog.setMessage(getString(R.string.addcontact_search));
+        progressDialog.show();
     }
 
     private void findUserInfo(final String name) {
@@ -96,25 +103,27 @@ public class AddContactActivity extends BaseActivity {
                     if (result != null && result.isRetMsg()) {
                         User user = (User) result.getRetData();
                         if (user != null) {
+                            userInfo = user;
                             success = true;
                         }
                     }
                 }
-                showResult(success);
+                showResult(success,userInfo);
             }
 
             @Override
             public void onError(String error) {
                 L.e(TAG, "onError,error = " + error);
-                showResult(false);
+                showResult(false,userInfo);
             }
         });
     }
 
-    private void showResult(boolean success) {
+    private void showResult(boolean success,User user) {
+        progressDialog.dismiss();
         llUser.setVisibility(success?View.GONE:View.VISIBLE);
         if (success){
-            MFGT.gotoFrientProfileActivity(AddContactActivity.this);
+            MFGT.gotoFrientProfileActivity(AddContactActivity.this,userInfo);
         }
     }
 
