@@ -55,17 +55,6 @@
         android:background="@drawable/ease_mm_listitem"
         android:duplicateParentState="true"
         android:visibility="gone">
-
-       <!-- <ImageView
-            android:id="@+id/avatar"
-            android:layout_width="45dp"
-            android:layout_height="45dp"
-            android:layout_centerVertical="true"
-            android:layout_marginLeft="11dp"
-            android:scaleType="fitXY"
-            android:src="@drawable/em_default_avatar"
-            android:layout_toRightOf="@id/avatar"/>
--->
         <TextView
             android:id="@+id/name"
             android:layout_centerInParent="true"
@@ -76,21 +65,6 @@
             android:text="该用户不存在"
             android:textColor="#0F0F0F"
             android:textSize="16sp" />
-
-
-        <Button
-            android:id="@+id/indicator"
-            android:layout_width="wrap_content"
-            android:layout_height="36dp"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:layout_marginRight="11dp"
-            android:background="@drawable/em_button_bg"
-            android:onClick="addContact"
-            android:paddingLeft="12dp"
-            android:paddingRight="12dp"
-            android:text="@string/button_add"
-            android:textSize="14sp" />
     </RelativeLayout>
 
 
