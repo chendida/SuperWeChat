@@ -136,6 +136,7 @@ public class SuperWeChatHelper {
 
     private InviteMessgeDao inviteMessgeDao;
     private UserDao userDao;
+    private IUserModel userModel;
 
     private LocalBroadcastManager broadcastManager;
 
@@ -158,6 +159,7 @@ public class SuperWeChatHelper {
 	 *            application context
 	 */
 	public void init(Context context) {
+        userModel = new UserModel();
 	    superWeChatModel = new SuperWeChatModel(context);
 	    EMOptions options = initChatOptions();
 	    //use default options if options is null
@@ -833,12 +835,38 @@ public class SuperWeChatHelper {
         if(inviteMessgeDao == null){
             inviteMessgeDao = new InviteMessgeDao(appContext);
         }
+        syncUserInfoAddToMsg(msg);
         inviteMessgeDao.saveMessage(msg);
         //increase the unread message count
         inviteMessgeDao.saveUnreadMessageCount(1);
         // notify there is new message
         getNotifier().vibrateAndPlayTone(null);
     }
+
+    private void syncUserInfoAddToMsg(final InviteMessage msg) {
+        userModel.loadUserInfo(appContext, msg.getFrom(), new OnCompleteListener<String>() {
+            @Override
+            public void onSuccess(String r) {
+                if (r != null){
+                    Result result = ResultUtils.getResultFromJson(r,User.class);
+                    if (result != null && result.isRetMsg()){
+                        User user = (User) result.getRetData();
+                        if (user != null){
+                            msg.setNickName(user.getMUserNick());
+                            msg.setAvatar(user.getAvatar());
+                        }
+                    }
+                }
+                inviteMessgeDao.saveMessage(msg);
+            }
+
+            @Override
+            public void onError(String error) {
+                inviteMessgeDao.saveMessage(msg);
+            }
+        });
+    }
+
 
     /**
      * user met some exception: conflict, removed or forbidden

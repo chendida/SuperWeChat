@@ -45,7 +45,7 @@ public class InviteMessage {
 	}
 
 	public String getNickName() {
-		return nickName;
+		return nickName==null?from:nickName;
 	}
 
 	public void setNickName(String nickName) {

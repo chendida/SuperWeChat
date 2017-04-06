@@ -123,7 +123,7 @@ public class AddContactActivity extends BaseActivity {
         progressDialog.dismiss();
         llUser.setVisibility(success?View.GONE:View.VISIBLE);
         if (success){
-            MFGT.gotoFrientProfileActivity(AddContactActivity.this,userInfo);
+            MFGT.gotoFrientProfileActivity(AddContactActivity.this,user);
         }
     }
 

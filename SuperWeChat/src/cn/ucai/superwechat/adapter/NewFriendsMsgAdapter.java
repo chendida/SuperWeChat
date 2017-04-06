@@ -16,6 +16,8 @@ package cn.ucai.superwechat.adapter;
 import java.util.List;
 
 import com.hyphenate.chat.EMClient;
+import com.hyphenate.easeui.utils.EaseUserUtils;
+
 import cn.ucai.superwechat.R;
 import cn.ucai.superwechat.db.InviteMessgeDao;
 import cn.ucai.superwechat.domain.InviteMessage;
@@ -91,7 +93,9 @@ public class NewFriendsMsgAdapter extends ArrayAdapter<InviteMessage> {
 			}
 			
 			holder.reason.setText(msg.getReason());
-			holder.name.setText(msg.getFrom());
+			//holder.name.setText(msg.getFrom());
+			holder.name.setText(msg.getNickName());
+			EaseUserUtils.setAvatar(context,msg.getAvatar(),holder.avator);
 			// holder.time.setText(DateUtils.getTimestampString(new
 			// Date(msg.getTime())));
 			if (msg.getStatus() == InviteMessage.InviteMesageStatus.BEAGREED) {
@@ -164,9 +168,7 @@ public class NewFriendsMsgAdapter extends ArrayAdapter<InviteMessage> {
 
 	/**
 	 * accept invitation
-	 * 
-	 * @param button
-	 * @param username
+	 *
 	 */
 	private void acceptInvitation(final Button buttonAgree, final Button buttonRefuse, final InviteMessage msg) {
 		final ProgressDialog pd = new ProgressDialog(context);
@@ -222,9 +224,7 @@ public class NewFriendsMsgAdapter extends ArrayAdapter<InviteMessage> {
 	
 	/**
      * decline invitation
-     * 
-     * @param button
-     * @param username
+     *
      */
     private void refuseInvitation(final Button buttonAgree, final Button buttonRefuse, final InviteMessage msg) {
         final ProgressDialog pd = new ProgressDialog(context);
