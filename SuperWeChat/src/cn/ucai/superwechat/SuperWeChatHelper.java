@@ -29,19 +29,26 @@ import com.hyphenate.chat.EMMessage.Type;
 import com.hyphenate.chat.EMOptions;
 import com.hyphenate.chat.EMTextMessageBody;
 
+import cn.ucai.superwechat.bean.Result;
 import cn.ucai.superwechat.db.SuperWeChatDBManager;
 import cn.ucai.superwechat.db.InviteMessgeDao;
 import cn.ucai.superwechat.db.UserDao;
 import cn.ucai.superwechat.domain.EmojiconExampleGroupData;
 import cn.ucai.superwechat.domain.InviteMessage;
 import cn.ucai.superwechat.domain.RobotUser;
+import cn.ucai.superwechat.model.IUserModel;
+import cn.ucai.superwechat.model.OnCompleteListener;
+import cn.ucai.superwechat.model.UserModel;
 import cn.ucai.superwechat.parse.UserProfileManager;
 import cn.ucai.superwechat.receiver.CallReceiver;
 import cn.ucai.superwechat.ui.ChatActivity;
 import cn.ucai.superwechat.ui.MainActivity;
 import cn.ucai.superwechat.ui.VideoCallActivity;
 import cn.ucai.superwechat.ui.VoiceCallActivity;
+import cn.ucai.superwechat.utils.CommonUtils;
 import cn.ucai.superwechat.utils.PreferenceManager;
+import cn.ucai.superwechat.utils.ResultUtils;
+
 import com.hyphenate.easeui.controller.EaseUI;
 import com.hyphenate.easeui.controller.EaseUI.EaseEmojiconInfoProvider;
 import com.hyphenate.easeui.controller.EaseUI.EaseSettingsProvider;
@@ -715,9 +722,10 @@ public class SuperWeChatHelper {
      * 
      */
     public class MyContactListener implements EMContactListener {
+        IUserModel model = new UserModel();
 
         @Override
-        public void onContactAdded(String username) {
+        public void onContactAdded(final String username) {
             // save contact
             Map<String, EaseUser> localUsers = getContactList();
             Map<String, EaseUser> toAddUsers = new HashMap<String, EaseUser>();
@@ -728,8 +736,35 @@ public class SuperWeChatHelper {
             }
             toAddUsers.put(username, user);
             localUsers.putAll(toAddUsers);
-
             broadcastManager.sendBroadcast(new Intent(Constant.ACTION_CONTACT_CHANAGED));
+            /*
+            添加好友关系到服务器
+             *//*
+            model.addContact(appContext, EMClient.getInstance().getCurrentUser(),
+                    username, new OnCompleteListener<String>() {
+                @Override
+                public void onSuccess(String r) {
+                    if (r != null){
+                        Result result = ResultUtils.getResultFromJson(r,User.class);
+                        if (result != null && result.isRetMsg()){
+                            User user = (User) result.getRetData();
+                            if (user != null && !getAppContactList().containsKey(username)){
+                                getAppContactList().put(username,user);
+                                userDao.saveAppContact(user);
+                                broadcastManager.sendBroadcast(new Intent(Constant.ACTION_CONTACT_CHANAGED));
+                                CommonUtils.showShortToast(R.string.add_friend_to_serverce_scuccess);
+                                return;
+                            }
+                        }
+                        CommonUtils.showShortToast(R.string.add_friend_to_serverce_fail);
+                    }
+                }
+
+                @Override
+                public void onError(String error) {
+                    CommonUtils.showShortToast(R.string.add_friend_to_serverce_fail);
+                }
+            });*/
         }
 
         @Override

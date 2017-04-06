@@ -17,6 +17,8 @@ public class InviteMessage {
 	private String from;
 	private long time;
 	private String reason;
+	private String nickName;
+	private String avatar;
 
 	private InviteMesageStatus status;
 	private String groupId;
@@ -42,6 +44,21 @@ public class InviteMessage {
 		this.time = time;
 	}
 
+	public String getNickName() {
+		return nickName;
+	}
+
+	public void setNickName(String nickName) {
+		this.nickName = nickName;
+	}
+
+	public String getAvatar() {
+		return avatar;
+	}
+
+	public void setAvatar(String avatar) {
+		this.avatar = avatar;
+	}
 
 	public String getReason() {
 		return reason;
