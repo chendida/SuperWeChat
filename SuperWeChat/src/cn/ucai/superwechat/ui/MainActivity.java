@@ -392,6 +392,7 @@ public class MainActivity extends BaseActivity
     public void onPageSelected(int position) {
         L.e(TAG, "onPageSelected,position = " + position);
         layoutTabhost.setChecked(position);
+        currentTabIndex = position;
     }
 
     @Override
@@ -403,6 +404,7 @@ public class MainActivity extends BaseActivity
     public void onCheckedChange(int checkedPosition, boolean byUser) {
         L.e(TAG, "onCheckedChange,checkedPosition = " + checkedPosition + "byUser = " + byUser);
         layoutViewpage.setCurrentItem(checkedPosition);
+        currentTabIndex = checkedPosition;
     }
 
     public class MyContactListener implements EMContactListener {
@@ -465,9 +467,8 @@ public class MainActivity extends BaseActivity
      * update unread message count
      */
     public void updateUnreadLabel() {
-        int count = getUnreadMsgCountTotal();
-        layoutTabhost.setHasNew(1,count > 0);
-        /*if (count > 0) {
+        /*int count = getUnreadMsgCountTotal();
+        if (count > 0) {
             unreadLabel.setText(String.valueOf(count));
             unreadLabel.setVisibility(View.VISIBLE);
         } else {
@@ -479,16 +480,17 @@ public class MainActivity extends BaseActivity
      * update the total unread count
      */
     public void updateUnreadAddressLable() {
-       /* runOnUiThread(new Runnable() {
+        runOnUiThread(new Runnable() {
             public void run() {
                 int count = getUnreadAddressCountTotal();
-                if (count > 0) {
+                layoutTabhost.setHasNew(1,count > 0);
+                /*if (count > 0) {
                     unreadAddressLable.setVisibility(View.VISIBLE);
                 } else {
                     unreadAddressLable.setVisibility(View.INVISIBLE);
-                }
+                }*/
             }
-        });*/
+        });
 
     }
 
