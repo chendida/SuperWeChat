@@ -465,8 +465,9 @@ public class MainActivity extends BaseActivity
      * update unread message count
      */
     public void updateUnreadLabel() {
-        /*int count = getUnreadMsgCountTotal();
-        if (count > 0) {
+        int count = getUnreadMsgCountTotal();
+        layoutTabhost.setHasNew(1,count > 0);
+        /*if (count > 0) {
             unreadLabel.setText(String.valueOf(count));
             unreadLabel.setVisibility(View.VISIBLE);
         } else {
