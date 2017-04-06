@@ -29,8 +29,8 @@ public class InviteMessgeDao {
 	
 	static final String COLUMN_NAME_TIME = "time";
 	static final String COLUMN_NAME_REASON = "reason";
-	static final String COLUMN_NAME_NICK = "nick";
-	static final String COLUMN_NAME_AVATAR = "avatar";
+	public static final String COLUMN_NAME_NICK = "nick";
+	public static final String COLUMN_NAME_AVATAR = "avatar";
 	public static final String COLUMN_NAME_STATUS = "status";
 	static final String COLUMN_NAME_ISINVITEFROMME = "isInviteFromMe";
 	static final String COLUMN_NAME_GROUPINVITER = "groupinviter";

@@ -1,6 +1,7 @@
 package cn.ucai.superwechat.ui;
 
 import android.app.ProgressDialog;
+import android.content.ContentValues;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -16,10 +17,18 @@ import butterknife.OnClick;
 import cn.ucai.superwechat.I;
 import cn.ucai.superwechat.R;
 import cn.ucai.superwechat.SuperWeChatHelper;
+import cn.ucai.superwechat.bean.Result;
+import cn.ucai.superwechat.db.InviteMessgeDao;
+import cn.ucai.superwechat.domain.InviteMessage;
+import cn.ucai.superwechat.model.IUserModel;
+import cn.ucai.superwechat.model.OnCompleteListener;
+import cn.ucai.superwechat.model.UserModel;
+import cn.ucai.superwechat.utils.L;
 import cn.ucai.superwechat.utils.MFGT;
+import cn.ucai.superwechat.utils.ResultUtils;
 
 public class FirentProfileActivity extends BaseActivity {
-
+    private static final String TAG = "FirentProfileActivity";
     @BindView(R.id.img_back)
     ImageView imgBack;
     @BindView(R.id.txt_title)
@@ -38,6 +47,8 @@ public class FirentProfileActivity extends BaseActivity {
     @BindView(R.id.btn_send_video)
     Button btnSendVideo;
     private ProgressDialog progressDialog;
+    IUserModel userModel;
+    InviteMessage msg;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,17 +56,31 @@ public class FirentProfileActivity extends BaseActivity {
         setContentView(R.layout.activity_firent_profile);
         ButterKnife.bind(this);
         user = (User) getIntent().getSerializableExtra(I.User.USER_NAME);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
         initView();
     }
 
     private void initView() {
+        userModel = new UserModel();
         imgBack.setVisibility(View.VISIBLE);
         txtTitle.setVisibility(View.VISIBLE);
         txtTitle.setText(R.string.title_user_detail_profile);
         if (user != null) {
             showUserInfo();
         } else {
-            MFGT.finish(FirentProfileActivity.this);
+            msg = (InviteMessage) getIntent().getSerializableExtra(I.User.PASSWORD);
+            if (msg != null){
+                user = new User(msg.getFrom());
+                user.setAvatar(msg.getAvatar());
+                user.setMUserNick(msg.getNickName());
+                showUserInfo();
+            }else {
+                MFGT.finish(FirentProfileActivity.this);
+            }
         }
     }
 
@@ -70,6 +95,7 @@ public class FirentProfileActivity extends BaseActivity {
         } else {
             btnAddContact.setVisibility(View.VISIBLE);
         }
+        syncUserInfo();
     }
 
     public boolean isFirent() {
@@ -101,5 +127,37 @@ public class FirentProfileActivity extends BaseActivity {
     @OnClick(R.id.img_back)
     public void onClick() {
         MFGT.finish(FirentProfileActivity.this);
+    }
+
+    private void syncUserInfo(){
+        //从服务器异步加载用户最新信息，填充到好友列表或者新的朋友列表
+        userModel.loadUserInfo(FirentProfileActivity.this, user.getMUserName(), new OnCompleteListener<String>() {
+            @Override
+            public void onSuccess(String r) {
+                if (r != null){
+                    Result result = ResultUtils.getResultFromJson(r,User.class);
+                    if (result != null && result.isRetMsg()){
+                        User user = (User) result.getRetData();
+                        if (user != null){
+                            if (msg != null){
+                                ContentValues values = new ContentValues();
+                                values.put(InviteMessgeDao.COLUMN_NAME_NICK,user.getMUserNick());
+                                values.put(InviteMessgeDao.COLUMN_NAME_AVATAR,user.getAvatar());
+                                InviteMessgeDao dao = new InviteMessgeDao(FirentProfileActivity.this);
+                                dao.updateMessage(msg.getId(),values);
+                                L.e(TAG,"msg = " + msg);
+                            }else if (isFirent()){
+                                SuperWeChatHelper.getInstance().saveAppContact(user);
+                            }
+                        }
+                    }
+                }
+            }
+
+            @Override
+            public void onError(String error) {
+
+            }
+        });
     }
 }
