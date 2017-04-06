@@ -88,12 +88,14 @@
     <string name="address_book">通讯录</string>
     <string name="setting">设置</string>
     <string name="now_refresh_list">正在加载数据</string>
-    <string name="Application_and_notify">申请与通知</string>
+    <string name="Application_and_notify">新的朋友</string>
     <string name="save_new_nickname">保存</string>
     <string name="nickname_description">设置此昵称以后，在与iOS客户端demo聊天过程中，iOS一侧会显示此昵称而不是环信ID，如果对方使用安卓客户端则此设置不生效</string>
     <string name="group_chat">群聊</string>
     <string name="chat_room">聊天室</string>
     <string name="add_friend">添加好友</string>
+    <string name="add_friend_to_serverce_scuccess">添加好友到服务器成功</string>
+    <string name="add_friend_to_serverce_fail">添加好友到服务器失败</string>
     <string name="search">搜索</string>
     <string name="black_item">黑名单</string>
     <string name="diagnose">诊断</string>
