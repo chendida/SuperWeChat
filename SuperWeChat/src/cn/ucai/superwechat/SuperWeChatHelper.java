@@ -738,10 +738,13 @@ public class SuperWeChatHelper {
             }
             toAddUsers.put(username, user);
             localUsers.putAll(toAddUsers);
+            //添加好友关系到服务器
+            addContactFirent(username);
             broadcastManager.sendBroadcast(new Intent(Constant.ACTION_CONTACT_CHANAGED));
-            /*
-            添加好友关系到服务器
-             *//*
+        }
+
+        private void addContactFirent(final String username) {
+            //添加好友关系到服务器
             model.addContact(appContext, EMClient.getInstance().getCurrentUser(),
                     username, new OnCompleteListener<String>() {
                 @Override
@@ -750,15 +753,18 @@ public class SuperWeChatHelper {
                         Result result = ResultUtils.getResultFromJson(r,User.class);
                         if (result != null && result.isRetMsg()){
                             User user = (User) result.getRetData();
-                            if (user != null && !getAppContactList().containsKey(username)){
-                                getAppContactList().put(username,user);
-                                userDao.saveAppContact(user);
+                            if (user != null){
+                                //保存到数据库
+                                Map<String,User>appContactList = getAppContactList();
+                                if (!appContactList.containsKey(username)){
+                                    userDao.saveAppContact(user);
+                                }
+                                //保存到内存
+                                appContactList.put(user.getMUserName(),user);
+                                //通知联系人列表更新
                                 broadcastManager.sendBroadcast(new Intent(Constant.ACTION_CONTACT_CHANAGED));
-                                CommonUtils.showShortToast(R.string.add_friend_to_serverce_scuccess);
-                                return;
                             }
                         }
-                        CommonUtils.showShortToast(R.string.add_friend_to_serverce_fail);
                     }
                 }
 
@@ -766,7 +772,7 @@ public class SuperWeChatHelper {
                 public void onError(String error) {
                     CommonUtils.showShortToast(R.string.add_friend_to_serverce_fail);
                 }
-            });*/
+            });
         }
 
         @Override
