@@ -13,6 +13,7 @@ import cn.ucai.superwechat.I;
 import cn.ucai.superwechat.R;
 import cn.ucai.superwechat.domain.InviteMessage;
 import cn.ucai.superwechat.ui.AddContactActivity;
+import cn.ucai.superwechat.ui.ChatActivity;
 import cn.ucai.superwechat.ui.FirentProfileActivity;
 import cn.ucai.superwechat.ui.LoginActivity;
 import cn.ucai.superwechat.ui.MainActivity;
@@ -87,5 +88,10 @@ public class MFGT {
     public static void gotoFirent(Context context, InviteMessage msg) {
         startActivity((Activity)context,new Intent((Activity)context,FirentProfileActivity.class)
         .putExtra(I.User.PASSWORD,msg));
+    }
+
+    public static void gotoChatActivity(Activity activity, String username) {
+        startActivity(activity,new Intent(activity, ChatActivity.class)
+        .putExtra("userId",username));
     }
 }

@@ -2,6 +2,7 @@ package cn.ucai.superwechat.ui;
 
 import android.app.ProgressDialog;
 import android.content.ContentValues;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -109,6 +110,8 @@ public class FirentProfileActivity extends BaseActivity {
                 addContact();
                 break;
             case R.id.btn_send_msg:
+                finish();
+                MFGT.gotoChatActivity(FirentProfileActivity.this,user.getMUserName());
                 break;
             case R.id.btn_send_video:
                 break;
