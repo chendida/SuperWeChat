@@ -779,6 +779,11 @@ public class SuperWeChatHelper {
         public void onContactDeleted(String username) {
             Map<String, EaseUser> localUsers = SuperWeChatHelper.getInstance().getContactList();
             localUsers.remove(username);
+            //监听到别人把你删除时，自动的也删除别人
+            SuperWeChatHelper.getInstance().getAppContactList().remove(username);
+            userDao.deleteAppContact(username);
+
+
             userDao.deleteContact(username);
             inviteMessgeDao.deleteMessage(username);
 
