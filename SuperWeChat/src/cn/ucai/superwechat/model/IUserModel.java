@@ -43,4 +43,8 @@ public interface IUserModel {
     删除好友
      */
     void deleteContact(Context context, String userName,String contactName, OnCompleteListener<String>listener);
+    /*
+    加载所有好友信息
+     */
+    void loadContactList(Context context, String userName, OnCompleteListener<String>listener);
 }

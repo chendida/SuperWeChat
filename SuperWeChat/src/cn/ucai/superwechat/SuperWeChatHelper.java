@@ -1261,6 +1261,39 @@ public class SuperWeChatHelper {
            listener.onSyncComplete(success);
        }
    }
+    public void asyncFetchAppContactsFromServe(){
+        if (isLoggedIn()){
+            userModel.loadContactList(appContext, EMClient.getInstance().getCurrentUser(),
+                    new OnCompleteListener<String>() {
+                @Override
+                public void onSuccess(String r) {
+                    if (r != null){
+                        Result result =  ResultUtils.getListResultFromJson(r,User.class);
+                        if (result != null && result.isRetMsg()){
+                            List<User>list = (List<User>) result.getRetData();
+                            Map<String,User> nameList= new HashMap<>();
+                            for (User user : list) {
+                                EaseCommonUtils.setAppUserInitialLetter(user);
+                                nameList.put(user.getMUserName(), user);
+                            }
+                            // save the contact list to cache
+                            getAppContactList().clear();
+                            getAppContactList().putAll(nameList);
+                            // save the contact list to database
+                            UserDao dao = new UserDao(appContext);
+                            List<User> users = new ArrayList<User>(nameList.values());
+                            dao.saveAppContactList(users);
+                        }
+                    }
+                }
+
+                @Override
+                public void onError(String error) {
+
+                }
+            });
+        }
+    }
    
    public void asyncFetchContactsFromServer(final EMValueCallBack<List<String>> callback){
        if(isSyncingContactsWithServer){
@@ -1268,7 +1301,7 @@ public class SuperWeChatHelper {
        }
        
        isSyncingContactsWithServer = true;
-       
+       asyncFetchAppContactsFromServe();
        new Thread(){
            @Override
            public void run(){
@@ -1435,6 +1468,7 @@ public class SuperWeChatHelper {
         isGroupAndContactListenerRegisted = false;
         
         setContactList(null);
+        setAppContactList(null);
         setRobotList(null);
         getUserProfileManager().reset();
         SuperWeChatDBManager.getInstance().closeDB();
