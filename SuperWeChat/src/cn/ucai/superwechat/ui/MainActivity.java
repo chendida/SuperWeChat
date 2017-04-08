@@ -468,6 +468,8 @@ public class MainActivity extends BaseActivity
      * update unread message count
      */
     public void updateUnreadLabel() {
+        int count = getUnreadMsgCountTotal();
+        layoutTabhost.setUnreadCount(0,count);//显示会话列表底部菜单栏的未读消息数量
         /*int count = getUnreadMsgCountTotal();
         if (count > 0) {
             unreadLabel.setText(String.valueOf(count));
