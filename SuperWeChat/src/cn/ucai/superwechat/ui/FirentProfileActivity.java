@@ -8,7 +8,9 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.hyphenate.chat.EMClient;
 import com.hyphenate.easeui.domain.User;
 import com.hyphenate.easeui.utils.EaseUserUtils;
 
@@ -114,7 +116,22 @@ public class FirentProfileActivity extends BaseActivity {
                 MFGT.gotoChatActivity(FirentProfileActivity.this,user.getMUserName());
                 break;
             case R.id.btn_send_video:
+                finish();
+                startVideoCall();
                 break;
+        }
+    }
+
+    /**
+     * make a video call
+     */
+    protected void startVideoCall() {
+        if (!EMClient.getInstance().isConnected())
+            Toast.makeText(FirentProfileActivity.this, R.string.not_connect_to_server, Toast.LENGTH_SHORT).show();
+        else {
+            startActivity(new Intent(FirentProfileActivity.this, VideoCallActivity.class).putExtra("username", user.getMUserName())
+                    .putExtra("isComingCall", false));
+            // videoCallBtn.setEnabled(false);
         }
     }
 
