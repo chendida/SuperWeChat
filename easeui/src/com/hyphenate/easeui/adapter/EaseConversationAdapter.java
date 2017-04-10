@@ -228,14 +228,14 @@ public class EaseConversationAdapter extends ArrayAdapter<EMConversation> {
                 results.values = copyConversationList;
                 results.count = copyConversationList.size();
             } else {
-                String prefixString = prefix.toString();
+                String prefixString = prefix.toString().toLowerCase();
                 final int count = mOriginalValues.size();
                 final ArrayList<EMConversation> newValues = new ArrayList<EMConversation>();
 
                 for (int i = 0; i < count; i++) {
                     final EMConversation value = mOriginalValues.get(i);
-                    String username = value.conversationId();
-                    String usernick = null;
+                    String username = value.conversationId().toLowerCase();
+                    String usernick = "";
                     
                     EMGroup group = EMClient.getInstance().groupManager().getGroup(username);
                     if(group != null){
@@ -244,7 +244,7 @@ public class EaseConversationAdapter extends ArrayAdapter<EMConversation> {
                         User user = EaseUserUtils.getAppUserInfo(username);
                         // TODO: not support Nick anymore
                         if(user != null && user.getMUserNick() != null)
-                            usernick = user.getMUserNick();
+                            usernick = user.getMUserNick().toLowerCase();
                     }
 
                     // First match against the whole ,non-splitted value
