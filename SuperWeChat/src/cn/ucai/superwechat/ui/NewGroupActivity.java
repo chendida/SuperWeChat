@@ -26,11 +26,24 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.hyphenate.chat.EMClient;
+import com.hyphenate.chat.EMGroup;
 import com.hyphenate.chat.EMGroupManager.EMGroupOptions;
 import com.hyphenate.chat.EMGroupManager.EMGroupStyle;
+
+import cn.ucai.superwechat.I;
 import cn.ucai.superwechat.R;
+import cn.ucai.superwechat.bean.Result;
+import cn.ucai.superwechat.model.GroupModel;
+import cn.ucai.superwechat.model.IGroupModel;
+import cn.ucai.superwechat.model.OnCompleteListener;
+import cn.ucai.superwechat.utils.CommonUtils;
+import cn.ucai.superwechat.utils.ResultUtils;
+
+import com.hyphenate.easeui.domain.Group;
 import com.hyphenate.easeui.widget.EaseAlertDialog;
 import com.hyphenate.exceptions.HyphenateException;
+
+import java.io.File;
 
 public class NewGroupActivity extends BaseActivity {
 	private EditText groupNameEditText;
@@ -39,6 +52,7 @@ public class NewGroupActivity extends BaseActivity {
 	private CheckBox publibCheckBox;
 	private CheckBox memberCheckbox;
 	private TextView secondTextView;
+	IGroupModel groupModel;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -49,6 +63,8 @@ public class NewGroupActivity extends BaseActivity {
 		publibCheckBox = (CheckBox) findViewById(R.id.cb_public);
 		memberCheckbox = (CheckBox) findViewById(R.id.cb_member_inviter);
 		secondTextView = (TextView) findViewById(R.id.second_desc);
+
+		groupModel = new GroupModel();
 		
 		publibCheckBox.setOnCheckedChangeListener(new OnCheckedChangeListener() {
 
@@ -108,13 +124,8 @@ public class NewGroupActivity extends BaseActivity {
 						    option.style = memberCheckbox.isChecked()?EMGroupStyle.EMGroupStylePrivateMemberCanInvite:EMGroupStyle.EMGroupStylePrivateOnlyOwnerInvite;
 						}
                         EMClient.getInstance().groupManager().createGroup(groupName, desc, members, reason, option);
-						runOnUiThread(new Runnable() {
-							public void run() {
-								progressDialog.dismiss();
-								setResult(RESULT_OK);
-								finish();
-							}
-						});
+						EMGroup EMgroup = EMClient.getInstance().groupManager().createGroup(groupName, desc, members, reason, option);
+						createAppGroup(EMgroup);
 					} catch (final HyphenateException e) {
 						runOnUiThread(new Runnable() {
 							public void run() {
@@ -123,11 +134,53 @@ public class NewGroupActivity extends BaseActivity {
 							}
 						});
 					}
-					
 				}
 			}).start();
 		}
 	}
+
+	private void createAppGroup(EMGroup group) {
+		File file = null;
+		groupModel.createGroup(NewGroupActivity.this, group, file, new OnCompleteListener<String>() {
+			@Override
+			public void onSuccess(String r) {
+				if (r != null){
+					Result result = ResultUtils.getResultFromJson(r,EMGroup.class);
+					if (result != null){
+						if (result.isRetMsg()) {
+							EMGroup appGroup = (EMGroup) result.getRetData();
+							if (appGroup != null) {
+								createGroupSuccess();
+							}
+						}else {
+								if (result.getRetCode() == I.MSG_GROUP_HXID_EXISTS){
+									CommonUtils.showShortToast("群组环信ID已经存在");
+								}
+								if (result.getRetCode() == I.MSG_GROUP_CREATE_FAIL){
+									CommonUtils.showShortToast(R.string.Failed_to_create_groups);
+								}
+						}
+					}
+				}
+			}
+			@Override
+			public void onError(String error) {
+				progressDialog.dismiss();
+				CommonUtils.showShortToast(R.string.Failed_to_create_groups);
+			}
+		});
+	}
+
+	private void createGroupSuccess() {
+		runOnUiThread(new Runnable() {
+			public void run() {
+				progressDialog.dismiss();
+				setResult(RESULT_OK);
+				finish();
+			}
+		});
+	}
+
 
 	public void back(View view) {
 		finish();
