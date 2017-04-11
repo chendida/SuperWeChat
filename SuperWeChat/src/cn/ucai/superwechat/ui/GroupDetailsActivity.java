@@ -521,6 +521,7 @@ public class GroupDetailsActivity extends BaseActivity implements OnClickListene
 		new Thread(new Runnable() {
 			public void run() {
 				try {
+					deleteGroup();
 					EMClient.getInstance().groupManager().destroyGroup(groupId);
 					runOnUiThread(new Runnable() {
 						public void run() {
@@ -541,6 +542,25 @@ public class GroupDetailsActivity extends BaseActivity implements OnClickListene
 				}
 			}
 		}).start();
+	}
+
+	private void deleteGroup() {
+		groupModel.deleteGroup(GroupDetailsActivity.this, groupId, new OnCompleteListener<String>() {
+			@Override
+			public void onSuccess(String r) {
+				if (r != null){
+					Result result = ResultUtils.getResultFromJson(r,Group.class);
+					if (result != null && result.isRetMsg()){
+						CommonUtils.showShortToast(R.string.delete_msg_when_exit_group);
+					}
+				}
+			}
+
+			@Override
+			public void onError(String error) {
+
+			}
+		});
 	}
 
 	/**

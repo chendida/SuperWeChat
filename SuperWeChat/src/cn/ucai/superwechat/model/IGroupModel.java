@@ -36,4 +36,8 @@ public interface IGroupModel {
     更新群组昵称
     */
     void updateGroupName(Context context,String groupId,String groupName,OnCompleteListener<String>listener);
+    /*
+    删除群组所有信息
+    */
+    void deleteGroup(Context context,String hxId,OnCompleteListener<String>listener);
 }
