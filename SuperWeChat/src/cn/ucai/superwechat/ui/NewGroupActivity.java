@@ -37,6 +37,7 @@ import com.hyphenate.chat.EMClient;
 import com.hyphenate.chat.EMGroup;
 import com.hyphenate.chat.EMGroupManager.EMGroupOptions;
 import com.hyphenate.chat.EMGroupManager.EMGroupStyle;
+import com.hyphenate.easeui.domain.Group;
 import com.hyphenate.easeui.widget.EaseAlertDialog;
 import com.hyphenate.exceptions.HyphenateException;
 
@@ -45,6 +46,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.Arrays;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -148,7 +150,7 @@ public class NewGroupActivity extends BaseActivity {
             public void run() {
                 final String groupName = groupNameEditText.getText().toString().trim();
                 String desc = introductionEditText.getText().toString();
-                String[] members = data.getStringArrayExtra("newmembers");
+                final String[] members = data.getStringArrayExtra("newmembers");
                 try {
                     EMGroupOptions option = new EMGroupOptions();
                     option.maxUsers = 200;
@@ -162,9 +164,9 @@ public class NewGroupActivity extends BaseActivity {
                     } else {
                         option.style = memberCheckbox.isChecked() ? EMGroupStyle.EMGroupStylePrivateMemberCanInvite : EMGroupStyle.EMGroupStylePrivateOnlyOwnerInvite;
                     }
-                    EMClient.getInstance().groupManager().createGroup(groupName, desc, members, reason, option);
+                    //EMClient.getInstance().groupManager().createGroup(groupName, desc, members, reason, option);
                     EMGroup EMgroup = EMClient.getInstance().groupManager().createGroup(groupName, desc, members, reason, option);
-                    createAppGroup(EMgroup);
+                    createAppGroup(EMgroup,members);
                 } catch (final HyphenateException e) {
                     runOnUiThread(new Runnable() {
                         public void run() {
@@ -185,17 +187,23 @@ public class NewGroupActivity extends BaseActivity {
         progressDialog.show();
     }
 
-    private void createAppGroup(EMGroup group) {
+    private void createAppGroup(EMGroup group,final String[] members) {
         groupModel.createGroup(NewGroupActivity.this, group, avatarFile, new OnCompleteListener<String>() {
             @Override
             public void onSuccess(String r) {
                 if (r != null) {
-                    Result result = ResultUtils.getResultFromJson(r, EMGroup.class);
+                    Result result = ResultUtils.getResultFromJson(r, Group.class);
                     if (result != null) {
                         if (result.isRetMsg()) {
-                            EMGroup appGroup = (EMGroup) result.getRetData();
+                            Group appGroup = (Group) result.getRetData();
                             if (appGroup != null) {
-                                createGroupSuccess();
+                                if (members.length > 0){
+                                    L.e(TAG,"2222");
+                                    addGroupMembers(appGroup.getMGroupHxid(),membersToString(members));
+                                }else {
+                                    L.e(TAG,"1111");
+                                    createGroupSuccess();
+                                }
                             }
                         } else {
                             if (result.getRetCode() == I.MSG_GROUP_HXID_EXISTS) {
@@ -215,6 +223,44 @@ public class NewGroupActivity extends BaseActivity {
                 CommonUtils.showShortToast(R.string.Failed_to_create_groups);
             }
         });
+    }
+
+    private void addGroupMembers(String mGroupHxid, String members) {
+        L.e(TAG,"addGroupMembers,mGroupHxid = " + mGroupHxid);
+        groupModel.addGroupMembers(NewGroupActivity.this, members, mGroupHxid, new OnCompleteListener<String>() {
+            @Override
+            public void onSuccess(String r) {
+                if (r != null){
+                    Result result = ResultUtils.getResultFromJson(r,Group.class);
+                    if (result != null && result.isRetMsg()){
+                        Group group = (Group) result.getRetData();
+                        if (group != null){
+                            L.e(TAG,"addGroupMembers, group = " + group);
+                            createGroupSuccess();
+                        } else {
+                            CommonUtils.showShortToast(R.string.Failed_to_create_groups);
+                        }
+                    }
+                }else {
+                    CommonUtils.showShortToast(R.string.Failed_to_create_groups);
+                }
+            }
+
+            @Override
+            public void onError(String error) {
+                progressDialog.dismiss();
+                CommonUtils.showShortToast(R.string.Failed_to_create_groups);
+            }
+        });
+    }
+
+    private String membersToString(String[] members) {
+        StringBuffer sb = new StringBuffer();
+        for (String member : members){
+            sb.append(member).append(",");
+        }
+        L.e(TAG,"membersToString,userNames" + sb);
+        return sb.toString().substring(0,sb.length()-1);
     }
 
     private void createGroupSuccess() {
