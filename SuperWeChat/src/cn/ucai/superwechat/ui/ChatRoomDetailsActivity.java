@@ -472,8 +472,8 @@ public class ChatRoomDetailsActivity extends BaseActivity implements OnClickList
 			// group member item
 			final String username = getItem(position);
 			holder.textView.setText(username);
-			EaseUserUtils.setUserNick(username, holder.textView);
-			EaseUserUtils.setUserAvatar(getContext(), username, holder.imageView);
+			EaseUserUtils.setAppUserNick(username, holder.textView);
+			EaseUserUtils.setAppUserAvatar(getContext(), username, holder.imageView);
 			LinearLayout id_background = (LinearLayout) convertView.findViewById(R.id.l_bg_id);
 			id_background.setBackgroundColor(convertView.getResources().getColor(
 					position == 0 ? R.color.holo_red_light: R.color.holo_orange_light));
