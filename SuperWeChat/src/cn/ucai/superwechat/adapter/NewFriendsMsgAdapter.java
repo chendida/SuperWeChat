@@ -21,6 +21,7 @@ import com.hyphenate.easeui.utils.EaseUserUtils;
 import cn.ucai.superwechat.R;
 import cn.ucai.superwechat.db.InviteMessgeDao;
 import cn.ucai.superwechat.domain.InviteMessage;
+import cn.ucai.superwechat.utils.L;
 import cn.ucai.superwechat.utils.MFGT;
 
 import android.app.Activity;
@@ -40,6 +41,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 public class NewFriendsMsgAdapter extends ArrayAdapter<InviteMessage> {
+	private static final String TAG = "NewFriendsMsgAdapter";
 
 	private Context context;
 	private InviteMessgeDao messgeDao;
@@ -89,14 +91,16 @@ public class NewFriendsMsgAdapter extends ArrayAdapter<InviteMessage> {
 		    
 			if(msg.getGroupId() != null){ // show group name
 				holder.groupContainer.setVisibility(View.VISIBLE);
-				holder.groupname.setText(msg.getGroupName());
+				L.e(TAG,"msg .......... = " + msg);
+				holder.groupname.setText(msg.getFrom());
+				EaseUserUtils.setAppGroupAvatar(context,msg.getGroupId(),holder.avator);
 			} else{
 				holder.groupContainer.setVisibility(View.GONE);
+				EaseUserUtils.setAvatar(context,msg.getAvatar(),holder.avator);
 			}
 			
 			holder.reason.setText(msg.getReason());
 			holder.name.setText(msg.getNickName());
-			EaseUserUtils.setAvatar(context,msg.getAvatar(),holder.avator);
 			// holder.time.setText(DateUtils.getTimestampString(new
 			// Date(msg.getTime())));
 			if (msg.getStatus() == InviteMessage.InviteMesageStatus.BEAGREED) {
