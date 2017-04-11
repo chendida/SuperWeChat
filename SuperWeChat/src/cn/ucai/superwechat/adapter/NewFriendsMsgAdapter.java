@@ -91,16 +91,18 @@ public class NewFriendsMsgAdapter extends ArrayAdapter<InviteMessage> {
 		    
 			if(msg.getGroupId() != null){ // show group name
 				holder.groupContainer.setVisibility(View.VISIBLE);
-				L.e(TAG,"msg .......... = " + msg);
-				holder.groupname.setText(msg.getGroupName());
+				L.e(TAG,"msg .......... = " + msg.getGroupName() + ": " + msg.getNickName());
+				holder.name.setText(msg.getGroupName());
+				holder.groupname.setText(msg.getGroupId());
 				EaseUserUtils.setAppGroupAvatar(context,msg.getGroupId(),holder.avator);
 			} else{
 				holder.groupContainer.setVisibility(View.GONE);
+				holder.name.setText(msg.getNickName());
 				EaseUserUtils.setAvatar(context,msg.getAvatar(),holder.avator);
 			}
 			
 			holder.reason.setText(msg.getReason());
-			holder.name.setText(msg.getNickName());
+			//holder.name.setText(msg.getNickName());
 			// holder.time.setText(DateUtils.getTimestampString(new
 			// Date(msg.getTime())));
 			if (msg.getStatus() == InviteMessage.InviteMesageStatus.BEAGREED) {
