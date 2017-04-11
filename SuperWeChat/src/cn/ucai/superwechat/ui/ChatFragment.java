@@ -35,6 +35,7 @@ import cn.ucai.superwechat.SuperWeChatHelper;
 import cn.ucai.superwechat.R;
 import cn.ucai.superwechat.domain.EmojiconExampleGroupData;
 import cn.ucai.superwechat.domain.RobotUser;
+import cn.ucai.superwechat.utils.L;
 import cn.ucai.superwechat.utils.MFGT;
 import cn.ucai.superwechat.widget.ChatRowVoiceCall;
 import com.hyphenate.easeui.EaseConstant;
@@ -259,6 +260,7 @@ public class ChatFragment extends EaseChatFragment implements EaseChatFragmentHe
                 Toast.makeText(getActivity(), R.string.gorup_not_found, Toast.LENGTH_SHORT).show();
                 return;
             }
+            L.e(TAG,"onEnterToChatDetails(),group = " + group);
             startActivityForResult(
                     (new Intent(getActivity(), GroupDetailsActivity.class).putExtra("groupId", toChatUsername)),
                     REQUEST_CODE_GROUP_DETAIL);

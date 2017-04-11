@@ -24,4 +24,12 @@ public interface IGroupModel {
     批量添加群成员
      */
     void addGroupMembers(Context context,String userNames,String group_hxid,OnCompleteListener<String>listener);
+    /*
+    删除群成员
+     */
+    void deleteGroupMember(Context context,String userNames,String myGroupId,OnCompleteListener<String>listener);
+    /*
+   根据环信Id下载所有成员信息
+    */
+    void findGroupByHxId(Context context,String hxId,OnCompleteListener<String>listener);
 }

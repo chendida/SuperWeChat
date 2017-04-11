@@ -50,4 +50,23 @@ public class GroupModel implements IGroupModel {
                 .targetClass(String.class)
                 .execute(listener);
     }
+
+    @Override
+    public void deleteGroupMember(Context context, String userNames, String myGroupId, OnCompleteListener<String> listener) {
+        OkHttpUtils<String>utils = new OkHttpUtils<>(context);
+        utils.setRequestUrl(I.REQUEST_DELETE_GROUP_MEMBER)
+                .addParam(I.Member.GROUP_ID,myGroupId)
+                .addParam(I.Member.USER_NAME,userNames)
+                .targetClass(String.class)
+                .execute(listener);
+    }
+
+    @Override
+    public void findGroupByHxId(Context context, String hxId, OnCompleteListener<String> listener) {
+        OkHttpUtils<String>utils = new OkHttpUtils<>(context);
+        utils.setRequestUrl(I.REQUEST_FIND_GROUP_BY_HXID)
+                .addParam(I.Group.HX_ID,hxId)
+                .targetClass(String.class)
+                .execute(listener);
+    }
 }

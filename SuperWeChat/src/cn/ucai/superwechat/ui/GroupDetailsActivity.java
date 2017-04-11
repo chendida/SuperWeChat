@@ -39,6 +39,16 @@ import com.hyphenate.chat.EMCursorResult;
 import com.hyphenate.chat.EMGroup;
 import com.hyphenate.chat.EMPushConfigs;
 import cn.ucai.superwechat.R;
+import cn.ucai.superwechat.bean.Result;
+import cn.ucai.superwechat.model.GroupModel;
+import cn.ucai.superwechat.model.IGroupModel;
+import cn.ucai.superwechat.model.OnCompleteListener;
+import cn.ucai.superwechat.utils.CommonUtils;
+import cn.ucai.superwechat.utils.L;
+import cn.ucai.superwechat.utils.ResultUtils;
+
+import com.hyphenate.easeui.domain.Group;
+import com.hyphenate.easeui.domain.Member;
 import com.hyphenate.easeui.ui.EaseGroupListener;
 import com.hyphenate.easeui.utils.EaseUserUtils;
 import com.hyphenate.easeui.widget.EaseAlertDialog;
@@ -71,7 +81,7 @@ public class GroupDetailsActivity extends BaseActivity implements OnClickListene
 	private ProgressDialog progressDialog;
 
 	public static GroupDetailsActivity instance;
-
+	IGroupModel groupModel;
 	
 	String st = "";
 
@@ -94,7 +104,8 @@ public class GroupDetailsActivity extends BaseActivity implements OnClickListene
 	    
         groupId = getIntent().getStringExtra("groupId");
         group = EMClient.getInstance().groupManager().getGroup(groupId);
-
+		L.e(TAG,"onCreate,groupId = " + groupId + ",group = " + group);
+		groupModel = new GroupModel();
         // we are not supposed to show the group if we don't find the group
         if(group == null){
             finish();
@@ -716,6 +727,7 @@ public class GroupDetailsActivity extends BaseActivity implements OnClickListene
 										EMClient.getInstance().groupManager().removeGroupAdmin(groupId, operationUserId);
 										break;
 									case R.id.menu_item_remove_member:
+										loadGroupInfo();
 										EMClient.getInstance().groupManager().removeUserFromGroup(groupId, operationUserId);
 										break;
 									case R.id.menu_item_add_to_blacklist:
@@ -765,6 +777,51 @@ public class GroupDetailsActivity extends BaseActivity implements OnClickListene
 			});
 		}
 		return dialog;
+	}
+
+	private void removeGroupMember(String groupId) {
+		L.e(TAG,"removeGroupMember" +operationUserId);
+		groupModel.deleteGroupMember(GroupDetailsActivity.this, operationUserId, groupId,
+				new OnCompleteListener<String>() {
+					@Override
+					public void onSuccess(String r) {
+						if (r != null){
+							Result result = ResultUtils.getResultFromJson(r, Group.class);
+							if (result != null && result.isRetMsg()){
+								CommonUtils.showShortToast(R.string.delete_msg_when_exit_group);
+							}
+						}
+					}
+					@Override
+					public void onError(String error) {
+						L.e(TAG,error);
+					}
+				});
+	}
+
+	private void loadGroupInfo() {
+		groupModel.findGroupByHxId(GroupDetailsActivity.this, groupId, new OnCompleteListener<String>() {
+			@Override
+			public void onSuccess(String r) {
+				if (r != null){
+					Result result = ResultUtils.getResultFromJson(r,Group.class);
+					if (result != null && result.isRetMsg()){
+						Group group = (Group) result.getRetData();
+						L.e(TAG,"removeGroupMember(),group = " + group.getMGroupId());
+						if (group != null){
+							removeGroupMember(String.valueOf(group.getMGroupId()));
+							L.e(TAG,"removeGroupMember(),group = " + group.getMGroupId());
+							CommonUtils.showShortToast(R.string.document_add_bankcard);
+						}
+					}
+				}
+			}
+
+			@Override
+			public void onError(String error) {
+
+			}
+		});
 	}
 
 	void setVisibility(Dialog viewGroups, int[] ids, boolean[] visibilities) throws Exception {
