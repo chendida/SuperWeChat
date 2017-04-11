@@ -290,6 +290,7 @@ public class GroupDetailsActivity extends BaseActivity implements OnClickListene
 					new Thread(new Runnable() {
 						public void run() {
 							try {
+								updateGroupName();
 								EMClient.getInstance().groupManager().changeGroupName(groupId, returnData);
 								runOnUiThread(new Runnable() {
 									public void run() {
@@ -347,6 +348,55 @@ public class GroupDetailsActivity extends BaseActivity implements OnClickListene
 			}
 		}
 	}
+
+	private void updateGroupName() {
+		groupModel.findGroupByHxId(GroupDetailsActivity.this, groupId, new OnCompleteListener<String>() {
+			@Override
+			public void onSuccess(String r) {
+				if (r != null){
+					Result result = ResultUtils.getResultFromJson(r,Group.class);
+					if (result != null && result.isRetMsg()){
+						Group group = (Group) result.getRetData();
+						L.e(TAG,"removeGroupMember(),group = " + group.getMGroupId());
+						if (group != null){
+							updateGroupNick(String.valueOf(group.getMGroupId()));
+							L.e(TAG,"removeGroupMember(),group = " + group.getMGroupId());
+							CommonUtils.showShortToast(R.string.document_add_bankcard);
+						}
+					}
+				}
+			}
+
+			@Override
+			public void onError(String error) {
+
+			}
+		});
+	}
+
+	private void updateGroupNick(String groupId) {
+		groupModel.updateGroupName(GroupDetailsActivity.this, groupId, group.getGroupName(), new OnCompleteListener<String>() {
+			@Override
+			public void onSuccess(String r) {
+				if (r != null){
+					Result result = ResultUtils.getResultFromJson(r,Group.class);
+					if (result != null && result.isRetMsg()){
+						Group group = (Group) result.getRetData();
+						if (group != null){
+							L.e(TAG,"removeGroupMember(),group = " + group.getMGroupId());
+							CommonUtils.showShortToast(R.string.document_add_bankcard);
+						}
+					}
+				}
+			}
+
+			@Override
+			public void onError(String error) {
+
+			}
+		});
+	}
+
 
 	private void refreshOwnerAdminAdapter() {
 		runOnUiThread(new Runnable() {

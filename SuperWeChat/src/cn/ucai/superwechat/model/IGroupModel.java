@@ -32,4 +32,8 @@ public interface IGroupModel {
    根据环信Id下载所有成员信息
     */
     void findGroupByHxId(Context context,String hxId,OnCompleteListener<String>listener);
+    /*
+    更新群组昵称
+    */
+    void updateGroupName(Context context,String groupId,String groupName,OnCompleteListener<String>listener);
 }
